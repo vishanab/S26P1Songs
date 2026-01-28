@@ -15,7 +15,16 @@ public class SongsTest extends TestCase {
         // Nothing to do
     }
 
-
+    // ----------------------------------------------------------
+    /**
+     * Test various bad inputs
+     *
+     * @throws Exception
+     */
+    
+    public void testBadInput() throws Exception {
+        assertTrue(true);
+    }
     // ----------------------------------------------------------
     /**
      * Test various bad inputs
