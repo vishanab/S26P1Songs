@@ -19,7 +19,7 @@ public class MemManager {
     public MemManager(int startSize) {
         this.startSize = startSize;
     }
-    public buddyMethod(int size) {
+    public int[] buddyMethod(int size) {
         int blockSize = 2;
         while (blockSize < size) {
             blockSize *= 2;
