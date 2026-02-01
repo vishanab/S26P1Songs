@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /**
  * Implement a hash table.
  * Data: Strings
@@ -10,6 +12,10 @@
 
 public class Hash {
 
+    private Handle[] table;
+    private int capacity;
+    private int size;
+
     /**
      * Create a new Hash object.
      *
@@ -19,7 +25,9 @@ public class Hash {
      *            Memory manager used by this table to store objects
      */
     public Hash(int init, MemManager m) {
-        // Put stuff here
+        table = new Handle[init];
+        capacity = init;
+        size = 0;
     }
 
 
@@ -44,18 +52,61 @@ public class Hash {
     }
 
 
-    public int quadProbe() {
-        int tableLength;
-         int home = h(tableLength);
-         int slot = home;
-         int i = 0;
-         while (stuff in slot) {
-             //quadratic probing
-             slot = (home + i*i) % tableLength;
-             i++;
-           
-         }
-         return slot;
-         
+    public int quadProbe(String s) {
+        int home = h(s, capacity);
+        int slot = home;
+        int i = 0;
+        while (table[slot] != null) {
+            slot = (home + i * i) % capacity;
+            i++;
+
+        }
+        return slot;
+
+    }
+
+
+    /**
+     * Insert to the hash table
+     *
+     * @param hand
+     *            handle to insert
+     * @return Error message if appropriate
+     * @throws IOException
+     */
+    public String insert(Handle hand) {
+        size++;
+        return "";
+
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove from the hash table
+     * 
+     * @param nameString
+     *            The string to be removed from the table
+     * @return Error message if appropriate
+     * @throws IOException
+     */
+    public String remove(String nameString) throws IOException {
+        size--;
+        return "";
+    }
+    
+    //resize if over 50% FULL
+    public void resize() {
+        Handle[] old = table;
+        capacity = capacity * 2;
+        table = new Handle[capacity];
+        size = 0;
+        for(Handle hand:old) {
+            if(hand != null) {
+                insert(hand);
+            }
+        }
+        
+        
     }
 }
