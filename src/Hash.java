@@ -8,9 +8,7 @@
  * @version 1/24/26
  */
 
-
-public class Hash
-{
+public class Hash {
 
     /**
      * Create a new Hash object.
@@ -20,10 +18,10 @@ public class Hash
      * @param m
      *            Memory manager used by this table to store objects
      */
-    public Hash(int init, MemManager m)
-    {
+    public Hash(int init, MemManager m) {
         // Put stuff here
     }
+
 
     /**
      * Compute the hash function. Uses the "sfold" method from the OpenDSA
@@ -43,5 +41,21 @@ public class Hash
             sum += s.charAt(i) * mult;
         }
         return (int)(Math.abs(sum) % m);
+    }
+
+
+    public int quadProbe() {
+        int tableLength;
+         int home = h(tableLength);
+         int slot = home;
+         int i = 0;
+         while (stuff in slot) {
+             //quadratic probing
+             slot = (home + i*i) % tableLength;
+             i++;
+           
+         }
+         return slot;
+         
     }
 }
