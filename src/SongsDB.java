@@ -7,16 +7,20 @@ import java.io.IOException;
  * @author Vishana Baskaran and Sital Paudel
  * @version 1/24/26
  */
-public class SongsDB implements Songs
-{
+public class SongsDB implements Songs {
+
+    private MemManager manager;
+    private Hash songTable;
+    private Hash artistTable;
+    private int memsize;
+    private int size;
 
     // ----------------------------------------------------------
     /**
      * Create a new SongsDB object.
      * But don't set anything -- that gets done by "create"
      */
-    public SongsDB()
-    {
+    public SongsDB() {
     }
 
 
@@ -29,17 +33,26 @@ public class SongsDB implements Songs
      *            Initial size for the memory manager
      * @return Error messages if appropriate
      */
-    public String create(int inHash, int inMemMan)
-    {
+    public String create(int inHash, int inMemMan) {
+        // create memory manager
+        manager = new MemManager(inMemMan);
+        songTable = new Hash(inHash, manager);
+        artistTable = new Hash(inHash, manager);
+        memsize = inMemMan;
+        size = inHash;
         return "";
     }
 
 
     /**
      * Re-initialize the database
+     * 
      * @return true on successful clear of database
      */
     public boolean clear() {
+        manager = new MemManager(memsize);
+        songTable = new Hash(size, manager);
+        artistTable = new Hash(size, manager);
         return true;
     }
 
@@ -56,9 +69,15 @@ public class SongsDB implements Songs
      * @throws IOException
      */
     public String insert(String artistString, String songString)
-        throws IOException
-    {
-        return "";
+        throws IOException {
+        Handle songHand = manager.insert(songString);
+        Handle artistHand = manager.insert(artistString);
+        String songStr = songTable.insert(songHand);
+        String artistStr = artistTable.insert(artistHand);
+        if (songStr != null || artistStr != null) {
+            return "one or both strings weren't inserted";
+        }
+        return null;
     }
 
 
@@ -87,8 +106,7 @@ public class SongsDB implements Songs
      * @return The string that was printed
      * @throws IOException
      */
-    public String print(String type)
-        throws IOException {
+    public String print(String type) throws IOException {
         return "";
     }
 }
