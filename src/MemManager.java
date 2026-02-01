@@ -15,7 +15,16 @@ public class MemManager {
      * @param startSize
      *            Initial size of the memory pool
      */
+    int startSize = 0;
     public MemManager(int startSize) {
-        // Put stuff here
+        this.startSize = startSize;
     }
+    public buddyMethod(int size) {
+        int blockSize = 2;
+        while (blockSize < size) {
+            blockSize *= 2;
+        }
+        
+    }
+    
 }
