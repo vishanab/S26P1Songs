@@ -39,7 +39,13 @@ public class MemManager {
         byte[] storage = record.getBytes();
         int size = storage.length;
         int index = buddyMethod(size);
-        
+        int i = index;
+        while (i<=k && count[i] == 0) {
+            i++;
+        }
+        if (i<k) {
+            //resize()
+        }
         
         
     }
