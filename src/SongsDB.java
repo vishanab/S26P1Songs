@@ -34,6 +34,15 @@ public class SongsDB implements Songs {
      * @return Error messages if appropriate
      */
     public String create(int inHash, int inMemMan) {
+        if (inHash < 1) {
+            return "Initial hash table size must be positive";
+        }
+        if (inMemMan < 1) {
+            return "Initial memory manager size must be positive";
+        }
+        if (inMemMan % 2 != 0) {
+            return "Initial memory manager size must be a power of 2";
+        }
         // create memory manager
         manager = new MemManager(inMemMan);
         songTable = new Hash(inHash, manager);
@@ -50,6 +59,9 @@ public class SongsDB implements Songs {
      * @return true on successful clear of database
      */
     public boolean clear() {
+        if (songTable == null) {
+            return false;
+        }
         manager = new MemManager(memsize);
         songTable = new Hash(size, manager);
         artistTable = new Hash(size, manager);
@@ -70,13 +82,26 @@ public class SongsDB implements Songs {
      */
     public String insert(String artistString, String songString)
         throws IOException {
-        Handle songHand = manager.insert(songString);
-        Handle artistHand = manager.insert(artistString);
-        String songStr = songTable.insert(songHand);
-        String artistStr = artistTable.insert(artistHand);
-        if (songStr != null || artistStr != null) {
-            return "one or both strings weren't inserted";
+        if (artistString == null || artistString == "" || songString == null
+            || songString == "") {
+            return "Input strings cannot be null or empty";
         }
+        if (songTable == null) {
+            return "Database not initialized";
+        }
+
+        // check for duplicates here
+        // if necessary, call resize method and REHASH
+        /*
+         * Handle songHand = manager.insert(songString);
+         * Handle artistHand = manager.insert(artistString);
+         * String songStr = songTable.insert(songHand, songString);
+         * String artistStr = artistTable.insert(artistHand, artistString);
+         * 
+         * if (songStr != null || artistStr != null) {
+         * return "one or both strings weren't inserted";
+         * }
+         */
         return null;
     }
 
@@ -93,6 +118,17 @@ public class SongsDB implements Songs {
      * @throws IOException
      */
     public String remove(String type, String nameString) throws IOException {
+        if (type == null || type == "" || nameString == null
+            || nameString == "") {
+            return "Input strings cannot be null or empty";
+        }
+        if (type != "song" && type != "artist") {
+            return "Bad type value |" + type + "| on remove";
+        }
+        if (songTable == null) {
+            return "Database not initialized";
+        }
+
         return "";
     }
 
@@ -107,6 +143,16 @@ public class SongsDB implements Songs {
      * @throws IOException
      */
     public String print(String type) throws IOException {
+        if (type == null || type == "") {
+            return "Input strings cannot be null or empty";
+        }
+        if (songTable == null) {
+            return "Database not initialized";
+        }
+        if (type != "song" && type != "artist") {
+            return "Bad print parameter";
+        }
+
         return "";
     }
 }

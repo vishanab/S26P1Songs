@@ -71,10 +71,12 @@ public class Hash {
      *
      * @param hand
      *            handle to insert
+     * @param s
+     *            string to insert
      * @return Error message if appropriate
      * @throws IOException
      */
-    public String insert(Handle hand) {
+    public String insert(Handle hand, String s) {
         size++;
         return "";
 
@@ -94,19 +96,21 @@ public class Hash {
         size--;
         return "";
     }
-    
-    //resize if over 50% FULL
+
+
+    // resize if over 50% FULL
     public void resize() {
         Handle[] old = table;
         capacity = capacity * 2;
         table = new Handle[capacity];
         size = 0;
-        for(Handle hand:old) {
-            if(hand != null) {
-                insert(hand);
-            }
-        }
-        
-        
+        /*
+         * for(Handle hand:old) {
+         * if(hand != null) {
+         * insert(hand);
+         * }
+         * }
+         */
+
     }
 }

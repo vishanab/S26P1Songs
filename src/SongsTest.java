@@ -15,6 +15,7 @@ public class SongsTest extends TestCase {
         // Nothing to do
     }
 
+  
     // ----------------------------------------------------------
     /**
      * Test various bad inputs
@@ -22,16 +23,6 @@ public class SongsTest extends TestCase {
      * @throws Exception
      */
     
-    public void testBadInput() throws Exception {
-        assertTrue(true);
-    }
-    // ----------------------------------------------------------
-    /**
-     * Test various bad inputs
-     *
-     * @throws Exception
-     */
-    /*
     public void testBadInput() throws Exception {
         it = new SongsDB();
         assertFalse(it.clear()); // Not been initialized yet
@@ -54,7 +45,6 @@ public class SongsTest extends TestCase {
         assertFuzzyEquals(
             "Database not initialized",
             it.print("blocks"));
-
         it.create(32, 32);
         assertFuzzyEquals(
             "Bad print parameter",
@@ -62,7 +52,6 @@ public class SongsTest extends TestCase {
         assertFuzzyEquals(
             "Bad type value |Dum| on remove",
             it.remove("Dum", "Dum"));
-
         assertFuzzyEquals(
             "Input strings cannot be null or empty",
             it.print(""));
@@ -96,7 +85,7 @@ public class SongsTest extends TestCase {
             "Input strings cannot be null or empty",
             it.remove(null, "a"));
     }
-*/
+
 
     // ----------------------------------------------------------
     /**
