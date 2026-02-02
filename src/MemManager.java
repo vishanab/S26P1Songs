@@ -46,8 +46,29 @@ public class MemManager {
         if (i<k) {
             //resize()
         }
-        
-        
+        while (i > index) {
+            int off = offsets[i][count[i]-1];
+            count[i] = count[i]-1;
+            int half = 1;
+            for (int x = 0; x < i-1; x++) {
+                half = half * 2;
+            }
+            offsets[i-1][count[i-1]] = off;
+            count[i-1] = count[i-1] + 1;
+            offsets[i-1][count[i-1]] = off + half;
+            count[i-1] = count[i-1] + 1;
+            i = i-1;
+        }
+        int off = offsets[index][count[index]-1];
+        count[index] = count[index]-1;
+        for(int k = 0; k < size; k++) {
+            memory[off+1] = storage[k];
+        }
+        return new Handle(off, size);
+    }
+    
+    public String find(Handle h) {
+        return "";
     }
     
     public int buddyMethod(int size) {
