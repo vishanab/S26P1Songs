@@ -26,6 +26,7 @@ public class HashTest extends TestCase {
 
     public void testHash() throws Exception {
     	assertEquals(0, table.h("", 32));
+    	assertEquals(9, table.h("abc", 10));
     }
 
 }
