@@ -161,10 +161,10 @@ public class SongsDB implements Songs {
         if (type =="blocks") {
         	return "No free blocks are available.";
         }
-        if(artistTable.getSize() == 0) {
+        if(type == "artist" && artistTable.getSize() == 0) {
         	return "total artists: 0";
         }
-        if(songTable.getSize() == 0) {
+        if(type == "song" && songTable.getSize() == 0) {
         	return "total songs: 0";
         }
         return "";
