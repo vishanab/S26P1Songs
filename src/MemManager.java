@@ -87,6 +87,14 @@ public class MemManager {
         return k;
     }
     
+    public void remove(Handle h) {
+        int size = h.getSize();
+        int index = buddyMethod(size);
+        int off = h.getIndex();
+        
+            
+        
+    }
     
     //insert method
     //find method if argument is handle, return string
