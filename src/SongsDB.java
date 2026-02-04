@@ -158,6 +158,9 @@ public class SongsDB implements Songs {
         if (type != "song" && type != "artist") {
             return "Bad print parameter";
         }
+        if (type =="blocks") {
+        	return "No free blocks are available.";
+        }
         if(artistTable.getSize() == 0) {
         	return "total artists: 0";
         }
