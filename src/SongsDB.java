@@ -59,6 +59,9 @@ public class SongsDB implements Songs {
      * @return true on successful clear of database
      */
     public boolean clear() {
+    	if (songTable == null) {
+    		return false;
+    	}
     	create(size, memsize);
     	return true;
     }
