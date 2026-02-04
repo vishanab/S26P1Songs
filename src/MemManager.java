@@ -68,7 +68,13 @@ public class MemManager {
     }
     
     public String find(Handle h) {
-        return "";
+        int index = h.getIndex();
+        int size = h.getSize();
+        String res = "";
+        for (int i = 0; i<size; i++) {
+            res += "" + memory[index+i];
+        }
+        return res;
     }
     
     public int buddyMethod(int size) {
