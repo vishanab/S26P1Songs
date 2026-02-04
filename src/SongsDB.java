@@ -90,16 +90,16 @@ public class SongsDB implements Songs {
 
         // check for duplicates here
         // if necessary, call resize method and REHASH
-        /*
-         * Handle songHand = manager.insert(songString);
-         * Handle artistHand = manager.insert(artistString);
-         * String songStr = songTable.insert(songHand, songString);
-         * String artistStr = artistTable.insert(artistHand, artistString);
-         * 
-         * if (songStr != null || artistStr != null) {
-         * return "one or both strings weren't inserted";
-         * }
-         */
+        
+        Handle songHand = manager.insert(songString);
+        Handle artistHand = manager.insert(artistString);
+        String songStr = songTable.insert(songHand, songString);
+        String artistStr = artistTable.insert(artistHand, artistString);
+          
+        if (songStr != null || artistStr != null) {
+         return "one or both strings weren't inserted";
+        }
+         
         return null;
     }
 
@@ -138,7 +138,7 @@ public class SongsDB implements Songs {
 
 
     // ----------------------------------------------------------
-    /**
+    /*
      * Print out the hash table contents
      *
      * @param type
