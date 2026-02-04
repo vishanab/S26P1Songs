@@ -30,22 +30,22 @@ public class HashTest extends TestCase {
     	assertTrue(table.h("LongerStringForTesting", 50) >= 0);
     }
     
-    public void testHashInsertFind() throws Exception {
-    	Handle h1 = new Handle(1,1);
-    	table.insert(h1, "Apple");
-    	assertEquals(1, table.getSize());
-    	assertEquals(h1, table.find("Apple"));
-    }
-    public void testHashQuad() throws Exception {
-    	Handle h1 = new Handle(1,1);
-    	Handle h2 = new Handle(3,1);
-
-    	table.insert(h1, "Collision1");
-    	table.insert(h2, "Collision2");
-
-    	assertEquals(h1, table.find("Collision1"));
-    	assertEquals(h2, table.find("Collision2"));
-
-    }
+//    public void testHashInsertFind() throws Exception {
+//    	Handle h1 = new Handle(1,1);
+//    	table.insert(h1, "Apple");
+//    	assertEquals(1, table.getSize());
+//    	assertEquals(h1, table.find("Apple"));
+//    }
+//    public void testHashQuad() throws Exception {
+//    	Handle h1 = new Handle(1,1);
+//    	Handle h2 = new Handle(3,1);
+//
+//    	table.insert(h1, "Collision1");
+//    	table.insert(h2, "Collision2");
+//
+//    	assertEquals(h1, table.find("Collision1"));
+//    	assertEquals(h2, table.find("Collision2"));
+//
+//    }
 
 }

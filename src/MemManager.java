@@ -59,7 +59,7 @@ public class MemManager {
         int off = offsets[index][count[index]-1];
         count[index] = count[index]-1;
         for(int k = 0; k < size; k++) {
-            memory[off+1] = storage[k];
+            memory[off+k] = storage[k];
         }
         return new Handle(off, size);
     }
@@ -69,7 +69,7 @@ public class MemManager {
         int size = h.getSize();
         String res = "";
         for (int i = 0; i<size; i++) {
-            res += "" + memory[index+i];
+            res += (char) memory[index+i];
         }
         return res;
     }
