@@ -55,20 +55,6 @@ public class Hash {
     }
 
 
-    public int quadProbe(String s) {
-        int home = h(s, capacity);
-        int slot = home;
-        int i = 0;
-        while (table[slot] != null) {
-            slot = (home + i * i) % capacity;
-            i++;
-
-        }
-        return slot;
-
-    }
-
-
     /**
      * Insert to the hash table
      *
@@ -83,7 +69,14 @@ public class Hash {
     	if ((size + 1) > capacity*0.5) {
     		resize();
     	}
-    	int slot = quadProbe(s);
+        int home = h(s, capacity);
+        int slot = home;
+        int i = 0;
+        while (table[slot] != null) {
+            slot = (home + i * i) % capacity;
+            i++;
+
+        }
     	table[slot] = hand;
         size++;
         return "";
