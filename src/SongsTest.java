@@ -121,7 +121,7 @@ public class SongsTest extends TestCase {
      *
      * @throws Exception
      */
-    /*
+    
 
     public void testSampleInput() throws Exception {
         it = new SongsDB();
@@ -236,6 +236,6 @@ public class SongsTest extends TestCase {
             + "128: 384",
             it.print("blocks"));
     }
-    */
+    
 
 }
