@@ -66,7 +66,7 @@ public class Hash {
      * @throws IOException
      */
     public String insert(Handle hand, String s) {
-    	if ((size + 1) > capacity*0.5) {
+    	if ((size + 1) > capacity/2) {
     		resize();
     	}
         int home = h(s, capacity);
@@ -92,6 +92,7 @@ public class Hash {
      * @return Error message if appropriate
      * @throws IOException
      */
+    /*
     public String remove(String nameString) throws IOException {
         int home = h(nameString, capacity);
         int slot = home;
@@ -107,7 +108,7 @@ public class Hash {
 
         }
         return "";
-    }
+    }*/
 
 
     // resize if over 50% FULL
@@ -116,13 +117,12 @@ public class Hash {
         capacity = capacity * 2;
         table = new Handle[capacity];
         size = 0;
-        /*
-         * for(Handle hand:old) {
-         * if(hand != null) {
-         * insert(hand);
-         * }
-         * }
-         */
+        for(Handle hand:old) {
+         if(hand != null) {
+        	 String s = manager.find(hand);
+        	 insert(hand,s);
+         }
+        }
 
     }
     
@@ -143,5 +143,8 @@ public class Hash {
     }
     public int getSize() {
     	return size;
+    }
+    public int getCapacity() {
+    	return capacity;
     }
 }
