@@ -115,13 +115,33 @@ public class SongsTest extends TestCase {
             it.remove("song", "Dum"));
     }
     
+    
     // ----------------------------------------------------------
     /**
      * Show output formats
      *
      * @throws Exception
      */
+
+    public void testClear() throws Exception {
+        it = new SongsDB();
+        it.create(10, 32);
+        it.insert("Bob", "SongName");
+        it.clear();
+        assertFuzzyEquals(
+                "|SongName| does not exist in the Song database",
+                it.remove("song", "SongName"));
+    }
+    // ----------------------------------------------------------
+    /**
+     * Show output formats
+     *
+     * @throws Exception
+     */
+<<<<<<< HEAD
     
+=======
+>>>>>>> 19e9a641a9255f0117597f83fa9e0bc5dcae3af4
 
     public void testSampleInput() throws Exception {
         it = new SongsDB();
@@ -236,6 +256,9 @@ public class SongsTest extends TestCase {
             + "128: 384",
             it.print("blocks"));
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> 19e9a641a9255f0117597f83fa9e0bc5dcae3af4
 
 }
