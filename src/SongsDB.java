@@ -59,13 +59,8 @@ public class SongsDB implements Songs {
      * @return true on successful clear of database
      */
     public boolean clear() {
-        if (songTable == null) {
-            return false;
-        }
-        manager = new MemManager(memsize);
-        songTable = new Hash(size, manager);
-        artistTable = new Hash(size, manager);
-        return true;
+    	create(size, memsize);
+    	return true;
     }
 
 
@@ -169,4 +164,5 @@ public class SongsDB implements Songs {
         }
         return "";
     }
+    
 }
