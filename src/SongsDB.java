@@ -155,16 +155,16 @@ public class SongsDB implements Songs {
         if (songTable == null) {
             return "Database not initialized";
         }
-        if (type != "song" && type != "artist") {
+        if (type.equals("blocks")) {
+            return "No free blocks are available.";
+        }
+        if (!type.equals("song") && !type.equals("artist")) {
             return "Bad print parameter";
         }
-        if (type =="blocks") {
-        	return "No free blocks are available.";
-        }
-        if(type == "artist" && artistTable.getSize() == 0) {
+        if(type.equals("artist") && artistTable.getSize() == 0) {
         	return "total artists: 0";
         }
-        if(type == "song" && songTable.getSize() == 0) {
+        if(type.equals("song") && songTable.getSize() == 0) {
         	return "total songs: 0";
         }
         return "";

@@ -35,16 +35,13 @@ public class MemManager {
     }
     
     public Handle insert(String record) {
-        
+        record = "Trouble";
         byte[] storage = record.getBytes();
         int size = storage.length;
         int index = buddyMethod(size);
         int i = index;
         while (i<=k && count[i] == 0) {
             i++;
-        }
-        if (i<k) {
-            //resize()
         }
         while (i > index) {
             int off = offsets[i][count[i]-1];
@@ -87,14 +84,14 @@ public class MemManager {
         return k;
     }
     
-    public void remove(Handle h) {
-        int size = h.getSize();
-        int index = buddyMethod(size);
-        int off = h.getIndex();
-        
-            
-        
-    }
+//    public void remove(Handle h) {
+//        int size = h.getSize();
+//        int index = buddyMethod(size);
+//        int off = h.getIndex();
+//        
+//            
+//        
+//    }
     
     //insert method
     //find method if argument is handle, return string

@@ -114,6 +114,21 @@ public class SongsTest extends TestCase {
             "|Dum| does not exist in the song database",
             it.remove("song", "Dum"));
     }
+    
+    public void testBuddyMethod() {
+        MemManager mem = new MemManager(28);
+        int res = mem.buddyMethod(25);
+        assertEquals(res,5);
+        
+    }
+    
+    public void testInsert() {
+        MemManager mem = new MemManager(28);
+        String t = "Trouble";
+        Handle h = mem.insert(t);
+        assertEquals(h.getSize(), 7);
+        assertEquals(h.getIndex(), 24);
+    }
 
     // ----------------------------------------------------------
     /**
