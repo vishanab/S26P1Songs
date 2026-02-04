@@ -85,7 +85,6 @@ public class SongsDB implements Songs {
             return "Database not initialized";
         }
 
-         return "one or both strings weren't inserted";
 //        // check for duplicates here
 //        // if necessary, call resize method and REHASH
 //        
