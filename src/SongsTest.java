@@ -93,8 +93,6 @@ public class SongsTest extends TestCase {
      *
      * @throws Exception
      */
-    /*
-
     public void testEmpty() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -117,7 +115,6 @@ public class SongsTest extends TestCase {
             it.remove("song", "Dum"));
     }
 
-*/
     // ----------------------------------------------------------
     /**
      * Show output formats

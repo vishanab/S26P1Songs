@@ -128,7 +128,13 @@ public class SongsDB implements Songs {
         if (songTable == null) {
             return "Database not initialized";
         }
+        if (type == "artist" && artistTable.find(nameString)==null) {
+        	return "|"+nameString + "| does not exist in the artist database";
+        }
 
+        if (type == "song" && songTable.find(nameString)==null) {
+        	return "|"+nameString + "| does not exist in the song database";
+        }
         return "";
     }
 
@@ -152,7 +158,12 @@ public class SongsDB implements Songs {
         if (type != "song" && type != "artist") {
             return "Bad print parameter";
         }
-
+        if(artistTable.getSize() == 0) {
+        	return "total artists: 0";
+        }
+        if(songTable.getSize() == 0) {
+        	return "total songs: 0";
+        }
         return "";
     }
 }
