@@ -91,11 +91,16 @@ public class SongsDB implements Songs {
         // check for duplicates here
         // if necessary, call resize method and REHASH
         String toRet = "";
+        int artSize = artistTable.getCapacity();
+        int songSize = songTable.getCapacity();
         Handle artistHand = manager.insert(artistString);
         if(manager.getResize()) {
             toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
         }
         String artistStr = artistTable.insert(artistHand, artistString);
+        if (artistTable.getCapacity() > artSize) {
+        	toRet+= "Artist hash table size doubled\r\n";
+        }
         if(artistStr==null) {
             toRet += artistString + " is added to the Artist database \r\n";
         }
@@ -104,6 +109,9 @@ public class SongsDB implements Songs {
             toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
         }
         String songStr = songTable.insert(songHand, songString);
+        if (songTable.getCapacity() > songSize) {
+        	toRet+= "Song hash table size doubled\r\n";
+        }
         if(songStr==null) {
             toRet += songString + " is added to the Song database";
         }
