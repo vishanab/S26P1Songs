@@ -147,4 +147,16 @@ public class Hash {
     public int getCapacity() {
     	return capacity;
     }
+    
+    public String print(String type) {
+    	String output = "";
+    	for(int i = 0; i < capacity; i++) {
+    		if (table[i] != null) {
+    			String name = manager.find(table[i]);
+    			output+= i+": |" + name + "|\n";
+    		}
+    	}
+    	output+= "total " + type + "s: " + size;
+    	return output;
+    }
 }
