@@ -19,6 +19,7 @@ public class MemManager {
     private byte[] memory;
     private int[][] offsets;
     private int[] count;
+    private boolean resize;
     
     public MemManager(int startSize) {
         memory = new byte[startSize];
@@ -32,16 +33,20 @@ public class MemManager {
         count = new int[k+1];
         offsets[k][0] = 0;
         count[k] = 1;
+        resize = false;
     }
     
     public Handle insert(String record) {
-        record = "Trouble";
         byte[] storage = record.getBytes();
         int size = storage.length;
         int index = buddyMethod(size);
         int i = index;
         while (i<=k && count[i] == 0) {
             i++;
+        }
+        if (i>k) {
+            resize();
+            return insert(record);
         }
         while (i > index) {
             int off = offsets[i][count[i]-1];
@@ -50,10 +55,10 @@ public class MemManager {
             for (int x = 0; x < i-1; x++) {
                 half = half * 2;
             }
-            offsets[i-1][count[i-1]] = off;
-            count[i-1] = count[i-1] + 1;
-            offsets[i-1][count[i-1]] = off + half;
-            count[i-1] = count[i-1] + 1;
+            int p = count[i-1];
+            offsets[i-1][p] = off;
+            offsets[i-1][p+1] = off + half;
+            count[i-1] = count[i-1] + 2;
             i = i-1;
         }
         int off = offsets[index][count[index]-1];
@@ -93,7 +98,41 @@ public class MemManager {
 //        
 //    }
     
+    public void resize() {
+        resize = true;
+        int nSize = memory.length * 2;
+        byte[] nMem = new byte[nSize];
+        for (int i = 0; i < memory.length; i++) {
+            nMem[i] = memory[i];
+        }
+        k = buddyMethod(nSize);
+        int[][] nOffsets = new int[k+1][nSize];
+        int[] nCount = new int[k+1];
+        for (int j = 0; j<offsets.length; j++) {
+            for(int k = 0; k<offsets[j].length; k++) {
+                nOffsets[j][k] = offsets[j][k];
+            }
+            nCount[j] = count[j];
+        }
+        int nIndex = buddyMethod(memory.length);
+        nOffsets[nIndex][nCount[nIndex]] = memory.length;
+        nCount[nIndex] += 1;
+        
+        offsets = nOffsets;
+        count = nCount;
+        memory = nMem;
+    }
+    
     //insert method
     //find method if argument is handle, return string
+    public boolean getResize() {
+        boolean toRet = resize;
+        resize = false;
+        return toRet;
+    }
+    
+    public int getMemSize() {
+        return memory.length;
+    }
     
 }

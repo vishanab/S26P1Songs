@@ -79,7 +79,7 @@ public class Hash {
         }
     	table[slot] = hand;
         size++;
-        return "";
+        return null;
 
     }
 

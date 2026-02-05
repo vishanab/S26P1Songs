@@ -88,19 +88,32 @@ public class SongsDB implements Songs {
             return "Database not initialized";
         }
 
-//        // check for duplicates here
-//        // if necessary, call resize method and REHASH
-//        
-//        Handle songHand = manager.insert(songString);
-//        Handle artistHand = manager.insert(artistString);
-//        String songStr = songTable.insert(songHand, songString);
-//        String artistStr = artistTable.insert(artistHand, artistString);
-//          
-//        if (songStr != null || artistStr != null) {
-//         return "one or both strings weren't inserted";
-//        }s
-         
-        return null;
+        // check for duplicates here
+        // if necessary, call resize method and REHASH
+        String toRet = "";
+        Handle artistHand = manager.insert(artistString);
+        if(manager.getResize()) {
+            toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+        }
+        String artistStr = artistTable.insert(artistHand, artistString);
+        if(artistStr==null) {
+            toRet += artistString + " is added to the Artist database \r\n";
+        }
+        Handle songHand = manager.insert(songString);
+        if(manager.getResize()) {
+            toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+        }
+        String songStr = songTable.insert(songHand, songString);
+        if(songStr==null) {
+            toRet += songString + " is added to the Song database";
+        }
+        if (songStr != null || artistStr != null) {
+         return "one or both strings weren't inserted";
+        }
+
+
+
+        return toRet;
     }
 
 
@@ -164,6 +177,15 @@ public class SongsDB implements Songs {
         }
         if(type.equals("song") && songTable.getSize() == 0) {
         	return "total songs: 0";
+        }
+        Hash t;
+        String l;
+        if (type.equals("songs")) {
+            t = songTable;
+            l = "songs";
+        } else {
+            t = artistTable;
+            l = "artists";
         }
         return "";
     }
