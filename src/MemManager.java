@@ -88,15 +88,7 @@ public class MemManager {
         }
         return k;
     }
-    
-//    public void remove(Handle h) {
-//        int size = h.getSize();
-//        int index = buddyMethod(size);
-//        int off = h.getIndex();
-//        
-//            
-//        
-//    }
+
     
     public void resize() {
         resize = true;
@@ -133,6 +125,27 @@ public class MemManager {
     
     public int getMemSize() {
         return memory.length;
+    }
+    
+    public String print(){
+        String toRet = "";
+        for (int i = 0; i <= k; i++) {
+            if (count[i] > 0) {
+                int block = 1;
+                for (int j = 0; j < i; j++) {
+                    block *= 2;
+                }
+                toRet += block + ":";
+                for (int j = 0; j < count[i]; j++) {
+                    toRet += " " + offsets[i][j];
+                }
+                
+                if (i<k) {
+                    toRet += "\r\n";
+                }
+            }
+        }
+        return toRet;
     }
     
 }

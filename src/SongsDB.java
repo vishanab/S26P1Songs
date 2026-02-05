@@ -91,25 +91,44 @@ public class SongsDB implements Songs {
         // check for duplicates here
         // if necessary, call resize method and REHASH
         String toRet = "";
-        Handle artistHand = manager.insert(artistString);
-        if(manager.getResize()) {
-            toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+        int artSize = artistTable.getCapacity();
+        int songSize = songTable.getCapacity();
+        Handle artistHand = artistTable.find(artistString);
+        if (artistHand == null) {
+            artistHand = manager.insert(artistString);
+            if(manager.getResize()) {
+                toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+            }
+            String artistStr = artistTable.insert(artistHand, artistString);
+            if (artistTable.getCapacity() > artSize) {
+                toRet+= "Artist hash table size doubled\r\n";
+            }
+            if(artistStr==null) {
+                toRet += artistString + " is added to the Artist database \r\n";
+            }
+        } else {
+            toRet += artistString + " duplicates a record already in the Artist Database\r\n";
         }
-        String artistStr = artistTable.insert(artistHand, artistString);
-        if(artistStr==null) {
-            toRet += artistString + " is added to the Artist database \r\n";
+        Handle songHand = songTable.find(songString);
+        if (songHand == null) {
+            songHand = manager.insert(songString);
+            if(manager.getResize()) {
+                toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+            }
+            String songStr = songTable.insert(songHand, songString);
+            if (songTable.getCapacity() > songSize) {
+                toRet+= "Song hash table size doubled\r\n";
+            }
+            if(songStr==null) {
+                toRet += songString + " is added to the Song database";
+            }
+        } else {
+            toRet += artistString + " duplicates a record already in the Song Database";
         }
-        Handle songHand = manager.insert(songString);
-        if(manager.getResize()) {
-            toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
-        }
-        String songStr = songTable.insert(songHand, songString);
-        if(songStr==null) {
-            toRet += songString + " is added to the Song database";
-        }
-        if (songStr != null || artistStr != null) {
-         return "one or both strings weren't inserted";
-        }
+
+//        if (songStr != null || artistStr != null) {
+//         return "one or both strings weren't inserted";
+//        }
 
 
 
@@ -139,15 +158,24 @@ public class SongsDB implements Songs {
         if (songTable == null) {
             return "Database not initialized";
         }
-        if (type == "artist" && artistTable.find(nameString)==null) {
-        	return "|"+nameString + "| does not exist in the artist database";
+        if (type.equals("artist")) {
+         if (artistTable.find(nameString)==null) {
+             return "|"+nameString + "| does not exist in the artist database";
+         }
+         artistTable.remove(nameString);
         }
-
-        if (type == "song" && songTable.find(nameString)==null) {
-        	return "|"+nameString + "| does not exist in the song database";
+        if (type.equals("song")) {
+         if (songTable.find(nameString)==null) {
+             return "|"+nameString + "| does not exist in the song database";
+         }
+         songTable.remove(nameString);
         }
-        return "";
+       
+     return "|"+nameString + "| is removed from the " + type + " database";
     }
+
+
+
 
 
     // ----------------------------------------------------------
@@ -166,33 +194,33 @@ public class SongsDB implements Songs {
         if (songTable == null) {
             return "Database not initialized";
         }
-        if (type.equals("blocks")) {
-            return "No free blocks are available.";
-        }
-        if (!type.equals("song") && !type.equals("artist")) {
+        if (!type.equals("song") && !type.equals("artist") && !type.equals("blocks")) {
             return "Bad print parameter";
         }
-        if(type.equals("artist") && artistTable.getSize() == 0) {
-        	return "total artists: 0";
+        if (type.equals("blocks")) {
+            String toRet = manager.print();
+            if (toRet.equals("")) {
+                return "No free blocks are available.";
+            }
+            return toRet;
         }
-        if(type.equals("song") && songTable.getSize() == 0) {
-        	return "total songs: 0";
+        if(type.equals("artist")) {
+         if (artistTable.getSize() == 0) {
+             return "total artists: 0";
+         }
+         return artistTable.print(type);
         }
-        Hash t;
-        String l;
-        if (type.equals("songs")) {
-            t = songTable;
-            l = "songs";
-        } else {
-            t = artistTable;
-            l = "artists";
+        if(type.equals("song")) {
+         if (songTable.getSize() == 0) {
+             return "total songs: 0";
+         }
+         return songTable.print(type);
         }
-        String toRet = "";
-        int num = 0;
-        for (int i = 0; i < t.getCapacity(); i++) {
-            Handle h = t.getHandle(i);
+        if (type.equals("block")) {
+            return manager.print();
         }
         return "";
     }
+
     
 }
