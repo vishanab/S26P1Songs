@@ -185,6 +185,7 @@ public class SongsDB implements Songs {
         	}
         	return songTable.print(type);
         }
+        /*
         Hash t;
         String l;
         if (type.equals("songs")) {
@@ -193,7 +194,7 @@ public class SongsDB implements Songs {
         } else {
             t = artistTable;
             l = "artists";
-        }
+        }*/
         return "";
     }
     
