@@ -146,7 +146,7 @@ public class SongsDB implements Songs {
         if (type == "song" && songTable.find(nameString)==null) {
         	return "|"+nameString + "| does not exist in the song database";
         }
-    	return "|"+nameString + "| is removed from the " + type + " database";
+        return "";
     }
 
 
@@ -172,18 +172,11 @@ public class SongsDB implements Songs {
         if (!type.equals("song") && !type.equals("artist")) {
             return "Bad print parameter";
         }
-        if(type.equals("artist")) {
-        	if (artistTable.getSize() == 0) {
-            	return "total artists: 0";
-
-        	}
-        	return artistTable.print(type);
+        if(type.equals("artist") && artistTable.getSize() == 0) {
+        	return "total artists: 0";
         }
-        if(type.equals("song")) {
-        	if (songTable.getSize() == 0) {
-        		return "total songs: 0";
-        	}
-        	return songTable.print(type);
+        if(type.equals("song") && songTable.getSize() == 0) {
+        	return "total songs: 0";
         }
         Hash t;
         String l;
@@ -193,6 +186,11 @@ public class SongsDB implements Songs {
         } else {
             t = artistTable;
             l = "artists";
+        }
+        String toRet = "";
+        int num = 0;
+        for (int i = 0; i < t.getCapacity(); i++) {
+            Handle h = t.getHandle(i);
         }
         return "";
     }
