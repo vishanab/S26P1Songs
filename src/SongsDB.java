@@ -93,7 +93,6 @@ public class SongsDB implements Songs {
         String toRet = "";
         int artSize = artistTable.getCapacity();
         int songSize = songTable.getCapacity();
-<<<<<<< HEAD
         Handle artistHand = artistTable.find(artistString);
         if (artistHand == null) {
             artistHand = manager.insert(artistString);
@@ -125,8 +124,7 @@ public class SongsDB implements Songs {
             }
         } else {
             toRet += artistString + " duplicates a record already in the Song Database";
-=======
-        Handle artistHand = manager.insert(artistString);
+        }
         if(manager.getResize()) {
             toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
         }
@@ -137,7 +135,6 @@ public class SongsDB implements Songs {
         if(artistStr==null) {
             toRet += artistString + " is added to the Artist database \r\n";
         }
-        Handle songHand = manager.insert(songString);
         if(manager.getResize()) {
             toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
         }
@@ -150,7 +147,6 @@ public class SongsDB implements Songs {
         }
         if (songStr != null || artistStr != null) {
          return "one or both strings weren't inserted";
->>>>>>> 124f055ec2018afdc2cc1ec978480205b0688317
         }
 
 //        if (songStr != null || artistStr != null) {
