@@ -9,7 +9,7 @@
  */
 
 public class MemManager {
-     /**
+    /**
      * Create a new MemManager object.
      *
      * @param startSize
@@ -20,7 +20,7 @@ public class MemManager {
     private int[][] offsets;
     private int[] count;
     private boolean resize;
-    
+
     public MemManager(int startSize) {
         memory = new byte[startSize];
         int blockSize = 1;
@@ -35,7 +35,8 @@ public class MemManager {
         count[k] = 1;
         resize = false;
     }
-    
+
+
     public Handle insert(String record) {
         byte[] storage = record.getBytes();
         int size = storage.length;
@@ -63,33 +64,43 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
+<<<<<<< HEAD
         for(int k = 0; k < size; k++) {
+=======
+        for (int k = 0; k < size; k++) {
+>>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
             memory[off + k] = storage[k];
         }
         return new Handle(off, size);
     }
-    
+
+
     public String find(Handle h) {
         int index = h.getIndex();
         int size = h.getSize();
         String res = "";
-        for (int i = 0; i<size; i++) {
-            res += (char) memory[index+i];
+        for (int i = 0; i < size; i++) {
+            res += (char)memory[index + i];
         }
         return res;
     }
-    
+
+
     public int buddyMethod(int size) {
         int blockSize = 1;
         int j = 0;
         while (blockSize < size) {
             blockSize *= 2;
+<<<<<<< HEAD
             j += 1;
+=======
+            k += 1;
+>>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
         }
         return j;
     }
 
-    
+
     public void resize() {
         resize = true;
         int nSize = memory.length * 2;
@@ -98,10 +109,10 @@ public class MemManager {
             nMem[i] = memory[i];
         }
         k = buddyMethod(nSize);
-        int[][] nOffsets = new int[k+1][nSize];
-        int[] nCount = new int[k+1];
-        for (int j = 0; j<offsets.length; j++) {
-            for(int k = 0; k<offsets[j].length; k++) {
+        int[][] nOffsets = new int[k + 1][nSize];
+        int[] nCount = new int[k + 1];
+        for (int j = 0; j < offsets.length; j++) {
+            for (int k = 0; k < offsets[j].length; k++) {
                 nOffsets[j][k] = offsets[j][k];
             }
             nCount[j] = count[j];
@@ -109,25 +120,28 @@ public class MemManager {
         int nIndex = buddyMethod(memory.length);
         nOffsets[nIndex][nCount[nIndex]] = memory.length;
         nCount[nIndex] += 1;
-        
+
         offsets = nOffsets;
         count = nCount;
         memory = nMem;
     }
-    
-    //insert method
-    //find method if argument is handle, return string
+
+
+    // insert method
+    // find method if argument is handle, return string
     public boolean getResize() {
         boolean toRet = resize;
         resize = false;
         return toRet;
     }
-    
+
+
     public int getMemSize() {
         return memory.length;
     }
-    
-    public String print(){
+
+
+    public String print() {
         String toRet = "";
         for (int i = 0; i <= k; i++) {
             if (count[i] > 0) {
@@ -138,7 +152,11 @@ public class MemManager {
                 for (int j = 0; j < count[i]; j++) {
                     toRet += block + " " + offsets[i][j];
                 }
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
                 if (i < k) {
                     toRet += "\r\n";
                 }
@@ -146,5 +164,5 @@ public class MemManager {
         }
         return toRet;
     }
-    
+
 }
