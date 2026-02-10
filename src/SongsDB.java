@@ -1,14 +1,13 @@
 import java.io.IOException;
 
 /**
- * The database implementation for this project.
- * We have two hash tables and a memory manager.
+ * The database implementation for this project. We have two hash tables and a
+ * memory manager.
  *
  * @author Vishana Baskaran and Sital Paudel
  * @version 1/24/26
  */
 public class SongsDB implements Songs {
-
     private MemManager manager;
     private Hash songTable;
     private Hash artistTable;
@@ -17,8 +16,8 @@ public class SongsDB implements Songs {
 
     // ----------------------------------------------------------
     /**
-     * Create a new SongsDB object.
-     * But don't set anything -- that gets done by "create"
+     * Create a new SongsDB object. But don't set anything -- that gets done by
+     * "create"
      */
     public SongsDB() {
     }
@@ -55,7 +54,7 @@ public class SongsDB implements Songs {
 
     /**
      * Re-initialize the database
-     * 
+     *
      * @return true on successful clear of database
      */
     public boolean clear() {
@@ -67,6 +66,8 @@ public class SongsDB implements Songs {
         artistTable = new Hash(size, manager);
         return true;
     }
+
+
     // ----------------------------------------------------------
     /**
      * Insert to the hash table
@@ -87,7 +88,6 @@ public class SongsDB implements Songs {
         if (songTable == null) {
             return "Database not initialized";
         }
-
         // check for duplicates here
         // if necessary, call resize method and REHASH
         String toRet = "";
@@ -96,65 +96,44 @@ public class SongsDB implements Songs {
         Handle artistHand = artistTable.find(artistString);
         if (artistHand == null) {
             artistHand = manager.insert(artistString);
-            if(manager.getResize()) {
-                toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+            if (manager.getResize()) {
+                toRet += "Memory pool expanded to be " + manager.getMemSize()
+                    + " bytes\r\n";
             }
             String artistStr = artistTable.insert(artistHand, artistString);
             if (artistTable.getCapacity() > artSize) {
-                toRet+= "Artist hash table size doubled\r\n";
+                toRet += "Artist hash table size doubled\r\n";
             }
-            if(artistStr==null) {
+            if (artistStr == null) {
                 toRet += artistString + " is added to the Artist database \r\n";
             }
-        } else {
-            toRet += artistString + " duplicates a record already in the Artist Database\r\n";
+        }
+        else {
+            toRet += artistString
+                + " duplicates a record already in the Artist Database\r\n";
         }
         Handle songHand = songTable.find(songString);
         if (songHand == null) {
             songHand = manager.insert(songString);
-            if(manager.getResize()) {
-                toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+            if (manager.getResize()) {
+                toRet += "Memory pool expanded to be " + manager.getMemSize()
+                    + " bytes\r\n";
             }
             String songStr = songTable.insert(songHand, songString);
             if (songTable.getCapacity() > songSize) {
-                toRet+= "Song hash table size doubled\r\n";
+                toRet += "Song hash table size doubled\r\n";
             }
-            if(songStr==null) {
+            if (songStr == null) {
                 toRet += songString + " is added to the Song database";
             }
-        } else {
-            toRet += artistString + " duplicates a record already in the Song Database";
         }
-        if(manager.getResize()) {
-            toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
+        else {
+            toRet += artistString
+                + " duplicates a record already in the Song Database";
         }
-        String artistStr = artistTable.insert(artistHand, artistString);
-        if (artistTable.getCapacity() > artSize) {
-        	toRet+= "Artist hash table size doubled\r\n";
-        }
-        if(artistStr==null) {
-            toRet += artistString + " is added to the Artist database \r\n";
-        }
-        if(manager.getResize()) {
-            toRet+="Memory pool expanded to be " + manager.getMemSize() + " bytes\r\n";
-        }
-        String songStr = songTable.insert(songHand, songString);
-        if (songTable.getCapacity() > songSize) {
-        	toRet+= "Song hash table size doubled\r\n";
-        }
-        if(songStr==null) {
-            toRet += songString + " is added to the Song database";
-        }
-        if (songStr != null || artistStr != null) {
-         return "one or both strings weren't inserted";
-        }
-
-//        if (songStr != null || artistStr != null) {
-//         return "one or both strings weren't inserted";
-//        }
-
-
-
+// if (songStr != null || artistStr != null) {
+// return "one or both strings weren't inserted";
+// }
         return toRet;
     }
 
@@ -171,53 +150,53 @@ public class SongsDB implements Songs {
      * @throws IOException
      */
     public String remove(String type, String nameString) throws IOException {
-        if (type == null || type == "" || nameString == null
-            || nameString == "") {
+        if (type == null || type.equals("") || nameString == null
+            || nameString.equals("")) {
             return "Input strings cannot be null or empty";
         }
-        if (type != "song" && type != "artist") {
+        if (!type.equals("song") && !type.equals("artist")) {
             return "Bad type value |" + type + "| on remove";
         }
         if (songTable == null) {
             return "Database not initialized";
         }
         if (type.equals("artist")) {
-         if (artistTable.find(nameString)==null) {
-             return "|"+nameString + "| does not exist in the artist database";
-         }
-         artistTable.remove(nameString);
+            if (artistTable.find(nameString) == null) {
+                return "|" + nameString
+                    + "| does not exist in the artist database";
+            }
+            artistTable.remove(nameString);
         }
         if (type.equals("song")) {
-         if (songTable.find(nameString)==null) {
-             return "|"+nameString + "| does not exist in the song database";
-         }
-         songTable.remove(nameString);
+            if (songTable.find(nameString) == null) {
+                return "|" + nameString
+                    + "| does not exist in the song database";
+            }
+            songTable.remove(nameString);
         }
-       
-     return "|"+nameString + "| is removed from the " + type + " database";
+        return "|" + nameString + "| is removed from the " + type + " database";
     }
-
-
-
 
 
     // ----------------------------------------------------------
     /*
      * Print out the hash table contents
      *
-     * @param type
-     *            Controls what object is being printed
+     * @param type Controls what object is being printed
+     *
      * @return The string that was printed
+     *
      * @throws IOException
      */
     public String print(String type) throws IOException {
-        if (type == null || type == "") {
+        if (type == null || type.equals("")) {
             return "Input strings cannot be null or empty";
         }
         if (songTable == null) {
             return "Database not initialized";
         }
-        if (!type.equals("song") && !type.equals("artist") && !type.equals("blocks")) {
+        if (!type.equals("song") && !type.equals("artist") && !type.equals(
+            "blocks")) {
             return "Bad print parameter";
         }
         if (type.equals("blocks")) {
@@ -227,23 +206,21 @@ public class SongsDB implements Songs {
             }
             return toRet;
         }
-        if(type.equals("artist")) {
-         if (artistTable.getSize() == 0) {
-             return "total artists: 0";
-         }
-         return artistTable.print(type);
+        if (type.equals("artist")) {
+            if (artistTable.getSize() == 0) {
+                return "total artists: 0";
+            }
+            return artistTable.print(type);
         }
-        if(type.equals("song")) {
-         if (songTable.getSize() == 0) {
-             return "total songs: 0";
-         }
-         return songTable.print(type);
+        if (type.equals("song")) {
+            if (songTable.getSize() == 0) {
+                return "total songs: 0";
+            }
+            return songTable.print(type);
         }
         if (type.equals("block")) {
             return manager.print();
         }
         return "";
     }
-
-    
 }
