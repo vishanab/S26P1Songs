@@ -27,10 +27,10 @@ public class MemManager {
         k = 0;
         while (blockSize < startSize) {
             blockSize *= 2;
-            k+=1;
+            k += 1;
         }
-        offsets = new int[k+1][startSize];
-        count = new int[k+1];
+        offsets = new int[k + 1][startSize];
+        count = new int[k + 1];
         offsets[k][0] = 0;
         count[k] = 1;
         resize = false;
@@ -41,30 +41,30 @@ public class MemManager {
         int size = storage.length;
         int index = buddyMethod(size);
         int i = index;
-        while (i<=k && count[i] == 0) {
+        while (i <= k && count[i] == 0) {
             i++;
         }
-        if (i>k) {
+        if (i > k) {
             resize();
             return insert(record);
         }
         while (i > index) {
-            int off = offsets[i][count[i]-1];
-            count[i] = count[i]-1;
+            int off = offsets[i][count[i] - 1];
+            count[i] = count[i] - 1;
             int half = 1;
-            for (int x = 0; x < i-1; x++) {
+            for (int x = 0; x < i - 1; x++) {
                 half = half * 2;
             }
-            int p = count[i-1];
-            offsets[i-1][p] = off;
-            offsets[i-1][p+1] = off + half;
-            count[i-1] = count[i-1] + 2;
-            i = i-1;
+            int p = count[i - 1];
+            offsets[i - 1][p] = off;
+            offsets[i - 1][p + 1] = off + half;
+            count[i - 1] = count[i - 1] + 2;
+            i = i - 1;
         }
-        int off = offsets[index][count[index]-1];
-        count[index] = count[index]-1;
+        int off = offsets[index][count[index] - 1];
+        count[index] = count[index] - 1;
         for(int k = 0; k < size; k++) {
-            memory[off+k] = storage[k];
+            memory[off + k] = storage[k];
         }
         return new Handle(off, size);
     }
@@ -81,12 +81,12 @@ public class MemManager {
     
     public int buddyMethod(int size) {
         int blockSize = 1;
-        int k = 0;
+        int j = 0;
         while (blockSize < size) {
             blockSize *= 2;
-            k+=1;
+            j += 1;
         }
-        return k;
+        return j;
     }
 
     
@@ -135,12 +135,11 @@ public class MemManager {
                 for (int j = 0; j < i; j++) {
                     block *= 2;
                 }
-                toRet += block + ":";
                 for (int j = 0; j < count[i]; j++) {
-                    toRet += " " + offsets[i][j];
+                    toRet += block + " " + offsets[i][j];
                 }
                 
-                if (i<k) {
+                if (i < k) {
                     toRet += "\r\n";
                 }
             }
