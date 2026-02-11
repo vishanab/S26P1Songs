@@ -9,7 +9,7 @@ public class SongsTest extends TestCase {
 
 
     /**
-     * Sets up the tests that follow. In general, used for initialization
+     * Sets up the tests thsat follow. In general, used for initialization
      */
     public void setUp() {
         // Nothing to do

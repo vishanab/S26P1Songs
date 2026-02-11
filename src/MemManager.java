@@ -104,8 +104,8 @@ public class MemManager {
         int[][] nOffsets = new int[k + 1][nSize];
         int[] nCount = new int[k + 1];
         for (int j = 0; j < offsets.length; j++) {
-            for (int x = 0; x < offsets[j].length; x++) {
-                nOffsets[j][x] = offsets[j][x];
+            for (int h = 0; h < count[j]; h++) {
+                nOffsets[j][h] = offsets[j][h];
             }
             nCount[j] = count[j];
         }
@@ -154,6 +154,55 @@ public class MemManager {
             }
         }
         return toRet;
+    }
+
+
+    public void remove(Handle h) {
+        int off = h.getIndex();
+        int size = h.getSize();
+        int level = buddyMethod(size);
+
+        offsets[level][count[level]] = off;
+        count[level] += 1;
+
+        merge(level);
+    }
+
+
+    public void merge(int level) {
+        if (level >= k) {
+            return;
+        }
+        int blockSize = 1;
+        for (int i = 0; i < level; i++) {
+            blockSize *= 2;
+        }
+        for (int i = 0; i < count[level] - 1; i++) {
+            for (int j = 0; j < count[level]; j++) {
+                int off1 = offsets[level][i];
+                int off2 = offsets[level][j];
+                int dif = off1 > off2 ? off1 - off2 : off2 - off1;
+
+                if (dif == blockSize) {
+                    int l = off1 < off2 ? off1 : off2;
+                    if (l % (blockSize * 2) == 0) {
+                        removeOff(level, i);
+                        removeOff(level, j > 1 ? j - 1 : j);
+                        offsets[level + 1][count[level + 1]++] = l;
+                        merge(level + 1);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void removeOff(int level, int index) {
+        for (int i = index; i < count[level] - 1; i++) {
+            offsets[level][i] = offsets[level][i + 1];
+        }
+        count[level] -= 1;
     }
 
 }
