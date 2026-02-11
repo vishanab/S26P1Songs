@@ -13,6 +13,9 @@ public class MemManagerTest extends TestCase {
     private String t;
     private Handle h;
 
+    /**
+     * Sets up the tests that follow. In general, used for initialization
+     */
     public void setUp() {
         mem = new MemManager(256);
         t = "Trouble";
@@ -20,6 +23,9 @@ public class MemManagerTest extends TestCase {
     }
 
 
+    /**
+     * tests the buddy method
+     */
     public void testBuddyMethod() {
         int res = mem.buddyMethod(25);
         assertEquals(res, 5);
@@ -27,12 +33,18 @@ public class MemManagerTest extends TestCase {
     }
 
 
+    /**
+     * tests the insert method
+     */
     public void testInsert() {
         assertEquals(h.getSize(), 7);
         assertEquals(h.getIndex(), 248);
     }
 
 
+    /**
+     * tests the find method
+     */
     public void testFind() {
         String res = mem.find(h);
         assertTrue(res.equals("Trouble"));
