@@ -41,6 +41,10 @@ public class MemManager {
         byte[] storage = record.getBytes();
         int size = storage.length;
         int index = buddyMethod(size);
+        
+        //test
+        System.out.println(">>> INSERTING: '" + record + "' (size=" + size + ", level=" + index + ")");
+
         int i = index;
         while (i <= k && count[i] == 0) {
             i++;
@@ -56,7 +60,15 @@ public class MemManager {
             for (int x = 0; x < i - 1; x++) {
                 half = half * 2;
             }
+//            int p = count[i - 1];
+//            offsets[i - 1][p] = off;
+//            offsets[i - 1][p + 1] = off + half;
+//            count[i - 1] = count[i - 1] + 2;
             int p = count[i - 1];
+            if (p + 1 >= offsets[i - 1].length) {
+                resize();
+                return insert(record);
+            }
             offsets[i - 1][p] = off;
             offsets[i - 1][p + 1] = off + half;
             count[i - 1] = count[i - 1] + 2;
@@ -64,6 +76,11 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
+        
+        //test
+        System.out.println("    Allocated at offset: " + off);
+        debugPrint();
+        
         for (int h = 0; h < size; h++) {
             memory[off + h] = storage[h];
         }
@@ -109,12 +126,16 @@ public class MemManager {
             }
             nCount[j] = count[j];
         }
-        nOffsets[k - 1][nCount[k - 1]] = memory.length;
-        nCount[k - 1] += 1;
+        nOffsets[k][nCount[k]] = memory.length / 2;
+        nCount[k] += 1;
 
         offsets = nOffsets;
         count = nCount;
         memory = nMem;
+        //test
+        System.out.println("=== AFTER RESIZE ===");
+        System.out.println("New size: " + memory.length + ", k=" + k);
+        debugPrint();
     }
 
 
@@ -134,22 +155,20 @@ public class MemManager {
 
     public String print() {
         String toRet = "";
-
+        boolean first = true;
         for (int i = 0; i <= k; i++) {
             if (count[i] > 0) {
                 int block = 1;
                 for (int j = 0; j < i; j++) {
                     block *= 2;
                 }
-                if (i != 0) {
+                if (!first) {
                     toRet += "\r\n";
                 }
+                first = false;
                 toRet += block;
                 for (int j = 0; j < count[i] && j < offsets[i].length; j++) {
                     toRet += " " + offsets[i][j];
-                }
-                if (i < k - 1) {
-                    toRet += "\r\n";
                 }
             }
         }
@@ -161,40 +180,31 @@ public class MemManager {
         int off = h.getIndex();
         int size = h.getSize();
         int level = buddyMethod(size);
-
+        while (level < k) {
+            int block = 1 << level;
+            int buddy = off ^ block;
+            int buddyInd = findMerge(level, buddy);
+            if (buddyInd == -1) {
+                break;
+            }
+            
+            removeOff(level, buddyInd);
+            off = Math.min(off, buddy);
+            level++;
+            
+        }
         offsets[level][count[level]] = off;
-        count[level] += 1;
-
-        merge(level);
+        count[level]++;
     }
 
 
-    public void merge(int level) {
-        if (level >= k) {
-            return;
-        }
-        int blockSize = 1;
-        for (int i = 0; i < level; i++) {
-            blockSize *= 2;
-        }
-        for (int i = 0; i < count[level] - 1; i++) {
-            for (int j = 0; j < count[level]; j++) {
-                int off1 = offsets[level][i];
-                int off2 = offsets[level][j];
-                int dif = off1 > off2 ? off1 - off2 : off2 - off1;
-
-                if (dif == blockSize) {
-                    int l = off1 < off2 ? off1 : off2;
-                    if (l % (blockSize * 2) == 0) {
-                        removeOff(level, i);
-                        removeOff(level, j > 1 ? j - 1 : j);
-                        offsets[level + 1][count[level + 1]++] = l;
-                        merge(level + 1);
-                        return;
-                    }
-                }
+    public int findMerge(int level, int buddyOff) {
+        for (int i = 0; i < count[level]; i++) {
+            if (offsets[level][i] == buddyOff) {
+                return i;
             }
         }
+        return -1;
     }
 
 
@@ -204,5 +214,20 @@ public class MemManager {
         }
         count[level] -= 1;
     }
-
+    
+    //test
+    public void debugPrint() {
+        for (int i = 0; i <= k; i++) {
+            if (count[i] > 0) {
+                int blockSize = 1;
+                for (int j = 0; j < i; j++) blockSize *= 2;
+                System.out.print("    Level " + i + " (size " + blockSize + "): ");
+                for (int j = 0; j < count[i]; j++) {
+                    System.out.print(offsets[i][j] + " ");
+                }
+                System.out.println("(count=" + count[i] + ")");
+            }
+        }
+    }
+    
 }

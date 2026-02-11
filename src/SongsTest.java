@@ -216,13 +216,12 @@ public class SongsTest extends TestCase {
         assertFuzzyEquals(
             "|(The Best Part Of) Breakin' Up| does not exist in the Song database",
             it.remove("song", "(The Best Part Of) Breakin' Up"));
-        /*
         assertFuzzyEquals(
             "16: 64 272\r\n"
             + "32: 128\r\n"
             + "64: 320\r\n"
             + "128: 384",
-            it.print("blocks"));*/
+            it.print("blocks"));
         assertFuzzyEquals(
             "|Blind Lemon Jefferson| duplicates a record already in the Artist database\r\n"
             + "|Got The Blues| is added to the Song database",
@@ -260,10 +259,9 @@ public class SongsTest extends TestCase {
             "|Mongo Santamaria| is added to the Artist database\r\n"
             + "|Watermelon Man| is added to the Song database",
             it.insert("Mongo Santamaria", "Watermelon Man"));
-        /*
         assertFuzzyEquals(
             "16: 368\r\n"
             + "128: 384",
-            it.print("blocks"));*/
+            it.print("blocks"));
     }
 }

@@ -109,7 +109,7 @@ public class Hash {
             if (table[slot] != TOMB) {
                 String curr = manager.find(table[slot]);
                 if (curr.equals(nameString)) {
-                    // manager.remove(table[slot]);
+                    manager.remove(table[slot]);
                     table[slot] = TOMB;
                     size--;
                     return "";
