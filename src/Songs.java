@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 import java.io.IOException;
 
@@ -14,8 +14,11 @@ public interface Songs {
     // ----------------------------------------------------------
     /**
      * (Re)initialize the database
-     * @param inHash Initial hash table size
-     * @param inMemMan Initial memory manager size
+     * 
+     * @param inHash
+     *            Initial hash table size
+     * @param inMemMan
+     *            Initial memory manager size
      * @return Error messages if appropriate
      */
     public String create(int inHash, int inMemMan);
@@ -24,6 +27,7 @@ public interface Songs {
     // ----------------------------------------------------------
     /**
      * (Re)initialize the database
+     * 
      * @return true on successful clear of database
      */
     public boolean clear();
@@ -68,6 +72,5 @@ public interface Songs {
      * @throws IOException
      */
     public String print(String type) throws IOException;
-
 
 }

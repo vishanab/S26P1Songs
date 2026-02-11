@@ -64,4 +64,80 @@ public class HashTest extends TestCase {
         assertEquals(1, table.getSize());
         // assertEquals(h1, table.find("Apple"));
     }
+
+
+    /**
+     * checks if insert works properly
+     */
+    public void testHashInsertRemove() throws Exception {
+        manager = new MemManager(64);
+        table = new Hash(10, manager);
+        Handle h1 = manager.insert("Apple");
+        Handle h2 = manager.insert("Banana");
+        Handle h3 = manager.insert("Cherry");
+
+        assertNull(table.find("Apple"));
+        assertNull(table.find("Banana"));
+
+        table.insert(h1, "Apple");
+        table.insert(h2, "Banana");
+        table.insert(h3, "Cherry");
+
+        assertEquals(h1, table.find("Apple"));
+        assertEquals(h2, table.find("Banana"));
+        assertEquals(h3, table.find("Cherry"));
+        assertEquals(3, table.getSize());
+
+        table.remove("Banana");
+        assertNull(table.find("Banana"));
+        assertEquals(2, table.getSize());
+
+        assertEquals(h1, table.find("Apple"));
+        assertEquals(h3, table.find("Cherry"));
+
+        table.remove("Apple");
+        table.remove("Cherry");
+        assertEquals(0, table.getSize());
+        assertNull(table.find("Apple"));
+        assertNull(table.find("Cherry"));
+    }
+
+
+    /**
+     * tests that tombstones work
+     */
+    public void testTombstone() throws Exception {
+        manager = new MemManager(64);
+        table = new Hash(5, manager);
+        Handle h1 = manager.insert("A");
+        Handle h2 = manager.insert("F");
+        table.insert(h1, "A");
+        table.insert(h2, "F");
+
+        table.remove("A");
+        assertNull(table.find("A"));
+        Handle h3 = manager.insert("K");
+        table.insert(h3, "K");
+        assertEquals(h3, table.find("K"));
+        assertEquals(h2, table.find("F"));
+        assertEquals(2, table.getSize());
+    }
+
+
+    /**
+     * tests capacity breach
+     */
+    public void testCapacity() throws Exception {
+        manager = new MemManager(128);
+        table = new Hash(5, manager);
+        table.insert(manager.insert("A"), "A");
+        table.insert(manager.insert("B"), "B");
+        table.insert(manager.insert("C"), "C");
+        String result = table.remove("Z");
+        assertEquals("", result);
+        assertEquals(3, table.getSize());
+        assertNotNull(table.find("A"));
+        assertNotNull(table.find("B"));
+        assertNotNull(table.find("C"));
+    }
 }
