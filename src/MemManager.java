@@ -1,4 +1,3 @@
-
 /**
  * Memory Manager class.
  * This version uses an array in memory.
@@ -7,20 +6,19 @@
  * @author Vishana Baskaran and Sital Paudel
  * @version 1/24/26
  */
-
 public class MemManager {
-    private int k;
-    private byte[] memory;
-    private int[][] offsets;
-    private int[] count;
-    private boolean resize;
-
     /**
      * Create a new MemManager object.
      *
      * @param startSize
      *            Initial size of the memory pool
      */
+    private int k;
+    private byte[] memory;
+    private int[][] offsets;
+    private int[] count;
+    private boolean resize;
+
     public MemManager(int startSize) {
         memory = new byte[startSize];
         int blockSize = 1;
@@ -37,21 +35,14 @@ public class MemManager {
     }
 
 
-    /**
-     * inserts a string into memory pool
-     *
-     * @param record
-     *            the string to store
-     * @return Handle w the starting index and size of the stored record
-     */
     public Handle insert(String record) {
         byte[] storage = record.getBytes();
         int size = storage.length;
         int index = buddyMethod(size);
-        
-        //test
-        System.out.println(">>> INSERTING: '" + record + "' (size=" + size + ", level=" + index + ")");
 
+        // test
+        System.out.println(">>> INSERTING: '" + record + "' (size=" + size
+            + ", level=" + index + ")");
         int i = index;
         while (i <= k && count[i] == 0) {
             i++;
@@ -67,10 +58,10 @@ public class MemManager {
             for (int x = 0; x < i - 1; x++) {
                 half = half * 2;
             }
-//            int p = count[i - 1];
-//            offsets[i - 1][p] = off;
-//            offsets[i - 1][p + 1] = off + half;
-//            count[i - 1] = count[i - 1] + 2;
+// int p = count[i - 1];
+// offsets[i - 1][p] = off;
+// offsets[i - 1][p + 1] = off + half;
+// count[i - 1] = count[i - 1] + 2;
             int p = count[i - 1];
             if (p + 1 >= offsets[i - 1].length) {
                 resize();
@@ -83,11 +74,11 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
-        
-        //test
+
+        // test
         System.out.println("    Allocated at offset: " + off);
         debugPrint();
-        
+
         for (int h = 0; h < size; h++) {
             memory[off + h] = storage[h];
         }
@@ -95,13 +86,6 @@ public class MemManager {
     }
 
 
-    /**
-     * find a record in memory given its handle.
-     *
-     * @param h
-     *            Handle in that memory location
-     * @return the string stored there
-     */
     public String find(Handle h) {
         int index = h.getIndex();
         int size = h.getSize();
@@ -113,13 +97,6 @@ public class MemManager {
     }
 
 
-    /**
-     * computes the buddy system level needed to store a block
-     *
-     * @param size
-     *            the size of the block to store
-     * @return level in the buddy system
-     */
     public int buddyMethod(int size) {
         int blockSize = 1;
         int j = 0;
@@ -131,9 +108,6 @@ public class MemManager {
     }
 
 
-    /**
-     * resizes the memory pool to double its current size.
-     */
     public void resize() {
         resize = true;
         int nSize = memory.length * 2;
@@ -152,22 +126,18 @@ public class MemManager {
         }
         nOffsets[k][nCount[k]] = memory.length / 2;
         nCount[k] += 1;
-
         offsets = nOffsets;
         count = nCount;
         memory = nMem;
-        //test
+        // test
         System.out.println("=== AFTER RESIZE ===");
         System.out.println("New size: " + memory.length + ", k=" + k);
         debugPrint();
     }
 
 
-    /**
-     * checks if the memory pool was resized
-     *
-     * @return True if the memory was resized since the last check
-     */
+    // insert method
+    // find method if argument is handle, return string
     public boolean getResize() {
         boolean toRet = resize;
         resize = false;
@@ -175,21 +145,11 @@ public class MemManager {
     }
 
 
-    /**
-     * returns the current size of the memory pool
-     *
-     * @return The size of the memory pool
-     */
     public int getMemSize() {
         return memory.length;
     }
 
 
-    /**
-     * prints the memory block offsets for each level
-     *
-     * @return string representation of memory
-     */
     public String print() {
         String toRet = "";
         boolean first = true;
@@ -213,12 +173,6 @@ public class MemManager {
     }
 
 
-    /**
-     * removes a block from memory
-     *
-     * @param h
-     *            handle pointing to the block to remove
-     */
     public void remove(Handle h) {
         int off = h.getIndex();
         int size = h.getSize();
@@ -230,82 +184,44 @@ public class MemManager {
             if (buddyInd == -1) {
                 break;
             }
-            
+
             removeOff(level, buddyInd);
             off = Math.min(off, buddy);
             level++;
-            
+
         }
         offsets[level][count[level]] = off;
         count[level]++;
     }
 
 
-<<<<<<< Updated upstream
     public int findMerge(int level, int buddyOff) {
         for (int i = 0; i < count[level]; i++) {
             if (offsets[level][i] == buddyOff) {
                 return i;
-=======
-    /**
-     * attempts to merge free blocks at a given level into higher-level blocks.
-     *
-     * @param level
-     *            the level in the buddy system to merge
-     */
-    public void merge(int level) {
-        if (level >= k) {
-            return;
-        }
-        int blockSize = 1;
-        for (int i = 0; i < level; i++) {
-            blockSize *= 2;
-        }
-        for (int i = 0; i < count[level] - 1; i++) {
-            for (int j = 0; j < count[level]; j++) {
-                int off1 = offsets[level][i];
-                int off2 = offsets[level][j];
-                int dif = off1 > off2 ? off1 - off2 : off2 - off1;
-
-                if (dif == blockSize) {
-                    int l = off1 < off2 ? off1 : off2;
-                    if (l % (blockSize * 2) == 0) {
-                        removeOff(level, i);
-                        removeOff(level, j > 1 ? j - 1 : j);
-                        offsets[level + 1][count[level + 1]++] = l;
-                        merge(level + 1);
-                        return;
-                    }
-                }
->>>>>>> Stashed changes
             }
         }
         return -1;
     }
 
 
-    /**
-     * removes an offset from a specific level's offset array.
-     *
-     * @param level
-     *            The buddy system level
-     * @param index
-     *            The index of the offset to remove
-     */
     public void removeOff(int level, int index) {
         for (int i = index; i < count[level] - 1; i++) {
             offsets[level][i] = offsets[level][i + 1];
         }
         count[level] -= 1;
     }
-    
-    //test
+
+
+    // test
     public void debugPrint() {
         for (int i = 0; i <= k; i++) {
             if (count[i] > 0) {
                 int blockSize = 1;
-                for (int j = 0; j < i; j++) blockSize *= 2;
-                System.out.print("    Level " + i + " (size " + blockSize + "): ");
+                for (int j = 0; j < i; j++)
+                    blockSize *= 2;
+                System.out.print("    Level " + i + " (size " + blockSize
+                    + "): ");
                 for (int j = 0; j < count[i]; j++) {
                     System.out.print(offsets[i][j] + " ");
                 }
@@ -313,5 +229,5 @@ public class MemManager {
             }
         }
     }
-    
+
 }
