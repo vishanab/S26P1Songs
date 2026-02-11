@@ -116,7 +116,9 @@ public class Hash {
     }
 
 
-    // resize if over 50% FULL
+    /**
+     * resize table (x2 capacity) if over 50% full
+     */
     public void resize() {
         Handle[] old = table;
         capacity = capacity * 2;
@@ -131,6 +133,13 @@ public class Hash {
     }
 
 
+    /**
+     * find the handle associated with a string
+     *
+     * @param s
+     *            the string to find
+     * @return Handle that was found
+     */
     public Handle find(String s) {
         int home = h(s, capacity);
         int slot = home;
@@ -152,16 +161,33 @@ public class Hash {
     }
 
 
+    /**
+     * returns the size of table
+     *
+     * @return size of table
+     */
     public int getSize() {
         return size;
     }
 
 
+    /**
+     * returns the capacity of table
+     *
+     * @return capacity of table
+     */
     public int getCapacity() {
         return capacity;
     }
 
 
+    /**
+     * print the hash table
+     *
+     * @param type
+     *            The type of table
+     * @return String representation of the table
+     */
     public String print(String type) {
         String output = "";
         for (int i = 0; i < capacity; i++) {
