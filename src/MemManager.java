@@ -64,8 +64,8 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
-        for (int r = 0; r < size; r++) {
-            memory[off + r] = storage[r];
+        for (int h = 0; h < size; h++) {
+            memory[off + h] = storage[h];
         }
         return new Handle(off, size);
     }
@@ -100,7 +100,7 @@ public class MemManager {
         for (int i = 0; i < memory.length; i++) {
             nMem[i] = memory[i];
         }
-        k = buddyMethod(nSize);
+        k = k + 1;
         int[][] nOffsets = new int[k + 1][nSize];
         int[] nCount = new int[k + 1];
         for (int j = 0; j < offsets.length; j++) {
@@ -109,9 +109,8 @@ public class MemManager {
             }
             nCount[j] = count[j];
         }
-        int nIndex = buddyMethod(memory.length);
-        nOffsets[nIndex][nCount[nIndex]] = memory.length;
-        nCount[nIndex] += 1;
+        nOffsets[k - 1][nCount[k - 1]] = memory.length;
+        nCount[k - 1] += 1;
 
         offsets = nOffsets;
         count = nCount;
@@ -135,16 +134,21 @@ public class MemManager {
 
     public String print() {
         String toRet = "";
+
         for (int i = 0; i <= k; i++) {
             if (count[i] > 0) {
                 int block = 1;
                 for (int j = 0; j < i; j++) {
                     block *= 2;
                 }
-                for (int j = 0; j < count[i]; j++) {
-                    toRet += block + " " + offsets[i][j];
+                if (i != 0) {
+                    toRet += "\r\n";
                 }
-                if (i < k) {
+                toRet += block;
+                for (int j = 0; j < count[i] && j < offsets[i].length; j++) {
+                    toRet += " " + offsets[i][j];
+                }
+                if (i < k - 1) {
                     toRet += "\r\n";
                 }
             }
