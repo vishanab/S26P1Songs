@@ -64,11 +64,7 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
-<<<<<<< HEAD
-        for(int k = 0; k < size; k++) {
-=======
         for (int k = 0; k < size; k++) {
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
             memory[off + k] = storage[k];
         }
         return new Handle(off, size);
@@ -91,11 +87,7 @@ public class MemManager {
         int j = 0;
         while (blockSize < size) {
             blockSize *= 2;
-<<<<<<< HEAD
             j += 1;
-=======
-            k += 1;
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
         }
         return j;
     }
@@ -152,11 +144,6 @@ public class MemManager {
                 for (int j = 0; j < count[i]; j++) {
                     toRet += block + " " + offsets[i][j];
                 }
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
                 if (i < k) {
                     toRet += "\r\n";
                 }
