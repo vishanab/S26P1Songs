@@ -81,8 +81,8 @@ public class SongsDB implements Songs {
      */
     public String insert(String artistString, String songString)
         throws IOException {
-        if (artistString == null || artistString.isEmpty() || songString
-            .isEmpty() || songString.isEmpty()) {
+        if (artistString == null || artistString.isEmpty() || songString == null
+            || songString.isEmpty()) {
             return "Input strings cannot be null or empty";
         }
         if (songTable == null) {
@@ -150,13 +150,8 @@ public class SongsDB implements Songs {
      * @throws IOException
      */
     public String remove(String type, String nameString) throws IOException {
-<<<<<<< HEAD
-        if (type == null || type.equals("") || nameString == null
-            || nameString.equals("")) {
-=======
         if (type == null || type.isEmpty() || nameString == null || nameString
             .isEmpty()) {
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
             return "Input strings cannot be null or empty";
         }
         if (!type.equals("song") && !type.equals("artist")) {
@@ -194,11 +189,7 @@ public class SongsDB implements Songs {
      * @throws IOException
      */
     public String print(String type) throws IOException {
-<<<<<<< HEAD
-        if (type == null || type.equals("")) {
-=======
         if (type == null || type.isEmpty()) {
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
             return "Input strings cannot be null or empty";
         }
         if (songTable == null) {

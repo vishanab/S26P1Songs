@@ -64,12 +64,8 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
-<<<<<<< HEAD
-        for(int k = 0; k < size; k++) {
-=======
-        for (int k = 0; k < size; k++) {
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
-            memory[off + k] = storage[k];
+        for (int h = 0; h < size; h++) {
+            memory[off + h] = storage[h];
         }
         return new Handle(off, size);
     }
@@ -91,11 +87,7 @@ public class MemManager {
         int j = 0;
         while (blockSize < size) {
             blockSize *= 2;
-<<<<<<< HEAD
             j += 1;
-=======
-            k += 1;
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
         }
         return j;
     }
@@ -108,18 +100,17 @@ public class MemManager {
         for (int i = 0; i < memory.length; i++) {
             nMem[i] = memory[i];
         }
-        k = buddyMethod(nSize);
+        k = k + 1;
         int[][] nOffsets = new int[k + 1][nSize];
         int[] nCount = new int[k + 1];
         for (int j = 0; j < offsets.length; j++) {
-            for (int k = 0; k < offsets[j].length; k++) {
-                nOffsets[j][k] = offsets[j][k];
+            for (int h = 0; h < count[j]; h++) {
+                nOffsets[j][h] = offsets[j][h];
             }
             nCount[j] = count[j];
         }
-        int nIndex = buddyMethod(memory.length);
-        nOffsets[nIndex][nCount[nIndex]] = memory.length;
-        nCount[nIndex] += 1;
+        nOffsets[k - 1][nCount[k - 1]] = memory.length;
+        nCount[k - 1] += 1;
 
         offsets = nOffsets;
         count = nCount;
@@ -143,21 +134,25 @@ public class MemManager {
 
     public String print() {
         String toRet = "";
+        
         for (int i = 0; i <= k; i++) {
             if (count[i] > 0) {
                 int block = 1;
                 for (int j = 0; j < i; j++) {
                     block *= 2;
                 }
-                for (int j = 0; j < count[i]; j++) {
-                    toRet += block + " " + offsets[i][j];
+                if (i != 0) {
+                    toRet += "\r\n";
                 }
-<<<<<<< HEAD
-                
-=======
+                toRet += block;
+                for (int j = 0; j < count[i] && j < offsets[i].length; j++) {
+                    toRet += " " + offsets[i][j];
+                }
 
->>>>>>> e4cc070671f247685bde5d03a1ee38f718a19f00
-                if (i < k) {
+                
+
+
+                if (i < k - 1) {
                     toRet += "\r\n";
                 }
             }

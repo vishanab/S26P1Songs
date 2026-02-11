@@ -3,7 +3,7 @@
 /**
  * This is a test case for memory manager
  * 
- * @author sitalpaudel
+ * @author Sital Paudel and Vishana Baskaran
  * @version Feb 3, 2026
  */
 import student.TestCase;
