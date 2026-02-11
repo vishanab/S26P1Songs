@@ -159,5 +159,14 @@ public class MemManager {
         }
         return toRet;
     }
+    
+    public void remove(Handle h) {
+        int off = h.getIndex();
+        int size = h.getSize();
+        int level = buddyMethod(size);
+        
+        offsets[level][count[level]] = off;
+        count[level] += 1;
+    }
 
 }

@@ -179,15 +179,15 @@ public class SongsDB implements Songs {
 
 
     // ----------------------------------------------------------
-    /*
+    /**
      * Print out the hash table contents
      *
-     * @param type Controls what object is being printed
-     *
+     * @param type
+     *            Controls what object is being printed
      * @return The string that was printed
-     *
      * @throws IOException
      */
+
     public String print(String type) throws IOException {
         if (type == null || type.isEmpty()) {
             return "Input strings cannot be null or empty";
