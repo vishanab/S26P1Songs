@@ -64,8 +64,8 @@ public class MemManager {
         }
         int off = offsets[index][count[index] - 1];
         count[index] = count[index] - 1;
-        for (int k = 0; k < size; k++) {
-            memory[off + k] = storage[k];
+        for (int r = 0; r < size; r++) {
+            memory[off + r] = storage[r];
         }
         return new Handle(off, size);
     }
@@ -104,8 +104,8 @@ public class MemManager {
         int[][] nOffsets = new int[k + 1][nSize];
         int[] nCount = new int[k + 1];
         for (int j = 0; j < offsets.length; j++) {
-            for (int k = 0; k < offsets[j].length; k++) {
-                nOffsets[j][k] = offsets[j][k];
+            for (int x = 0; x < offsets[j].length; x++) {
+                nOffsets[j][x] = offsets[j][x];
             }
             nCount[j] = count[j];
         }

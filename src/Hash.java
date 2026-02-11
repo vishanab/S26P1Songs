@@ -14,7 +14,7 @@ public class Hash {
     private int capacity;
     private int size;
     private MemManager manager;
-    private static final Handle TOMB = new Handle(-1, 0);
+    private static final Handle TOMB = new Handle(-1, -1);
 
     /**
      * Create a new Hash object.
@@ -71,12 +71,19 @@ public class Hash {
         int home = h(s, capacity);
         int slot = home;
         int i = 0;
+        int fTomb = -1;
         while (table[slot] != null) {
+            if (table[slot] == TOMB && fTomb == -1) {
+                fTomb = slot;
+            }
             slot = (home + i * i) % capacity;
             i++;
             if (i >= capacity) {
                 break;
             }
+        }
+        if (fTomb != -1) {
+            slot = fTomb;
         }
         table[slot] = hand;
         size++;
@@ -104,12 +111,13 @@ public class Hash {
                 if (curr.equals(nameString)) {
                     table[slot] = TOMB;
                     size--;
+                    return "";
                 }
             }
             slot = (home + i * i) % capacity;
             i++;
             if (i >= capacity) {
-                break;
+                return "";
             }
         }
         return "";
@@ -125,7 +133,7 @@ public class Hash {
         table = new Handle[capacity];
         size = 0;
         for (Handle hand : old) {
-            if (hand != null) {
+            if (hand != null && hand != TOMB) {
                 String s = manager.find(hand);
                 insert(hand, s);
             }
@@ -154,7 +162,7 @@ public class Hash {
             slot = (home + i * i) % capacity;
             i++;
             if (i >= capacity) {
-                break;
+                return null;
             }
         }
         return null;
