@@ -1,11 +1,3 @@
-/**
- * Memory Manager class.
- * This version uses an array in memory.
- * This version implements the buddy method.
- *
- * @author Vishana Baskaran and Sital Paudel
- * @version 1/24/26
- */
 public class MemManager {
     /**
      * Create a new MemManager object.
@@ -64,15 +56,10 @@ public class MemManager {
                 offsets[i][j] = offsets[i][j + 1];
             }
             count[i] = count[i] - 1;
-
             int half = 1;
             for (int x = 0; x < i - 1; x++) {
                 half = half * 2;
             }
-// int p = count[i - 1];
-// offsets[i - 1][p] = off;
-// offsets[i - 1][p + 1] = off + half;
-// count[i - 1] = count[i - 1] + 2;
             int p = count[i - 1];
             offsets[i - 1][p] = off;
             offsets[i - 1][p + 1] = off + half;
@@ -84,7 +71,6 @@ public class MemManager {
             offsets[index][j] = offsets[index][j + 1];
         }
         count[index] = count[index] - 1;
-
         for (int h = 0; h < size; h++) {
             memory[off + h] = storage[h];
         }
@@ -118,11 +104,11 @@ public class MemManager {
      * @return The level in the buddy system
      */
     public int buddyMethod(int size) {
-        int blockSize = 1;
-        int j = 0;
-        while (blockSize < size) {
-            blockSize *= 2;
-            j += 1;
+        int blockSize = memory.length;
+        int j = k;
+        while (blockSize / 2 >= size) {
+            blockSize /= 2;
+            j -= 1;
         }
         return j;
     }
@@ -139,6 +125,7 @@ public class MemManager {
         for (int i = 0; i < memory.length; i++) {
             nMem[i] = memory[i];
         }
+        int oldK = k;
         k = k + 1;
         int[][] nOffsets = new int[k + 1][];
         for (int i = 0; i <= k; i++) {
@@ -157,6 +144,7 @@ public class MemManager {
         }
         nOffsets[k - 1][nCount[k - 1]] = oldSize;
         nCount[k - 1] += 1;
+
         offsets = nOffsets;
         count = nCount;
         memory = nMem;
@@ -201,7 +189,6 @@ public class MemManager {
                 }
                 int n = count[i];
                 int[] arr = offsets[i];
-
                 for (int j = 0; j < n - 1; j++) {
                     for (int x = j + 1; x < n; x++) {
                         if (arr[j] > arr[x]) {
@@ -246,12 +233,10 @@ public class MemManager {
             if (buddyInd == -1) {
                 break;
             }
-
             removeOff(level, buddyInd);
             int mergedSize = block * 2;
             off = (off / mergedSize) * mergedSize;
             level++;
-
         }
         offsets[level][count[level]] = off;
         count[level]++;
@@ -267,7 +252,7 @@ public class MemManager {
      *            the offset
      * @return integer for the merge
      */
-    public int findMerge(int level, int buddyOff) {
+    private int findMerge(int level, int buddyOff) {
         for (int i = 0; i < count[level]; i++) {
             if (offsets[level][i] == buddyOff) {
                 return i;
@@ -285,11 +270,10 @@ public class MemManager {
      * @param index
      *            The index of the offset to remove
      */
-    public void removeOff(int level, int index) {
+    private void removeOff(int level, int index) {
         for (int i = index; i < count[level] - 1; i++) {
             offsets[level][i] = offsets[level][i + 1];
         }
         count[level] -= 1;
     }
-
 }

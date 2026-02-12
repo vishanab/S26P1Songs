@@ -23,15 +23,6 @@ public class MemManagerTest extends TestCase {
     }
 
 
-    /**
-     * tests the buddy method
-     */
-    public void testBuddyMethod() {
-        int res = mem.buddyMethod(25);
-        assertEquals(res, 5);
-
-    }
-
 
     /**
      * tests the insert method

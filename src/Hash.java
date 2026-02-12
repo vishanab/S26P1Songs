@@ -76,11 +76,11 @@ public class Hash {
             if (table[slot] == TOMB && fTomb == -1) {
                 fTomb = slot;
             }
-            slot = (home + i * i) % capacity;
             i++;
             if (i >= capacity) {
                 break;
             }
+            slot = (home + i * i) % capacity;
         }
         if (fTomb != -1) {
             slot = fTomb;
@@ -115,11 +115,11 @@ public class Hash {
                     return "";
                 }
             }
-            slot = (home + i * i) % capacity;
             i++;
             if (i >= capacity) {
                 return "";
             }
+            slot = (home + i * i) % capacity;
         }
         return "";
     }
@@ -160,11 +160,11 @@ public class Hash {
                     return table[slot];
                 }
             }
-            slot = (home + i * i) % capacity;
             i++;
             if (i >= capacity) {
                 return null;
             }
+            slot = (home + i * i) % capacity;
         }
         return null;
     }

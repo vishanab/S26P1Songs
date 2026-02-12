@@ -128,12 +128,9 @@ public class SongsDB implements Songs {
             }
         }
         else {
-            toRet += artistString
+            toRet += songString
                 + " duplicates a record already in the Song Database";
         }
-// if (songStr != null || artistStr != null) {
-// return "one or both strings weren't inserted";
-// }
         return toRet;
     }
 
@@ -207,20 +204,8 @@ public class SongsDB implements Songs {
             return toRet;
         }
         if (type.equals("artist")) {
-            if (artistTable.getSize() == 0) {
-                return "total artists: 0";
-            }
             return artistTable.print(type);
         }
-        if (type.equals("song")) {
-            if (songTable.getSize() == 0) {
-                return "total songs: 0";
-            }
-            return songTable.print(type);
-        }
-        if (type.equals("block")) {
-            return manager.print();
-        }
-        return "";
+        return songTable.print(type);
     }
 }

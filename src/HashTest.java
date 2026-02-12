@@ -140,4 +140,25 @@ public class HashTest extends TestCase {
         assertNotNull(table.find("B"));
         assertNotNull(table.find("C"));
     }
+
+
+    public void testInsertICapacityBranch() throws Exception {
+        manager = new MemManager(32);
+        table = new Hash(4, manager); // small table
+
+        Handle h1 = manager.insert("A");
+        Handle h2 = manager.insert("B");
+        Handle h3 = manager.insert("C");
+        Handle h4 = manager.insert("D");
+        Handle h5 = manager.insert("E"); // extra handle
+
+        assertNull(table.insert(h1, "A"));
+        assertNull(table.insert(h2, "B"));
+        assertNull(table.insert(h3, "C"));
+        assertNull(table.insert(h4, "D"));
+
+        // table is now full, all slots non-null
+        // inserting another element forces the loop to probe all slots
+        assertNull(table.insert(h5, "E")); // hits i >= capacity break
+    }
 }
