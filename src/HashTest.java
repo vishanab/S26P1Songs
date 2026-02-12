@@ -157,8 +157,6 @@ public class HashTest extends TestCase {
         assertNull(table.insert(h3, "C"));
         assertNull(table.insert(h4, "D"));
 
-        // table is now full, all slots non-null
-        // inserting another element forces the loop to probe all slots
         assertNull(table.insert(h5, "E")); // hits i >= capacity break
     }
 }
