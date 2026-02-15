@@ -1,6 +1,7 @@
 
 /**
- * Hello
+ * This is a project where we store records with songs and artists using hash
+ * tables and memory managers.
  */
 
 import java.io.IOException;

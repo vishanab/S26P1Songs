@@ -31,15 +31,14 @@ public class MemManager {
 
 
     /**
-     * Inserts a string record into memory using the buddy method.
+     * Inserts a bytes of a string record into memory using the buddy method.
      *
-     * @param record
-     *            The string to store
+     * @param storage
+     *            The byte to store
      * @return Handle containing the starting index and size of the stored
      *         record
      */
-    public Handle insert(String record) {
-        byte[] storage = record.getBytes();
+    public Handle insert(byte[] storage) {
         int size = storage.length;
         int index = buddyMethod(size);
         int i = index;
@@ -48,7 +47,7 @@ public class MemManager {
         }
         if (i > k) {
             resize();
-            return insert(record);
+            return insert(storage);
         }
         while (i > index) {
             int off = offsets[i][0];
@@ -71,9 +70,7 @@ public class MemManager {
             offsets[index][j] = offsets[index][j + 1];
         }
         count[index] = count[index] - 1;
-        for (int h = 0; h < size; h++) {
-            memory[off + h] = storage[h];
-        }
+        System.arraycopy(storage, 0, memory, off, size);
         return new Handle(off, size);
     }
 
@@ -83,14 +80,14 @@ public class MemManager {
      *
      * @param h
      *            Handle pointing to the memory location
-     * @return The string stored at the handle's location
+     * @return the bytes of the string stored at the handle's location
      */
-    public String find(Handle h) {
+    public byte[] find(Handle h) {
         int index = h.getIndex();
         int size = h.getSize();
-        String res = "";
+        byte[] res = new byte[size];
         for (int i = 0; i < size; i++) {
-            res += (char)memory[index + i];
+            res[i] += memory[index + i];
         }
         return res;
     }

@@ -8,7 +8,7 @@ public class SongsTest extends TestCase {
     private Songs it;
 
     /**
-     * Sets up the tests thsat follow. In general, used for initialization
+     * Sets up the tests that follow. In general, used for initialization
      */
     public void setUp() {
         // Nothing to do
@@ -21,7 +21,6 @@ public class SongsTest extends TestCase {
      *
      * @throws Exception
      */
-
     public void testBadInput() throws Exception {
         it = new SongsDB();
         assertFalse(it.clear()); // Not been initialized yet
@@ -31,7 +30,6 @@ public class SongsTest extends TestCase {
             .create(10, 0));
         assertFuzzyEquals("Initial memory manager size must be a power of 2", it
             .create(10, 3));
-
         assertFuzzyEquals("Database not initialized", it.insert("a", "b"));
         assertFuzzyEquals("Database not initialized", it.remove("song", "a"));
         assertFuzzyEquals("Database not initialized", it.print("blocks"));
@@ -43,7 +41,6 @@ public class SongsTest extends TestCase {
             ""));
         assertFuzzyEquals("Input strings cannot be null or empty", it.print(
             null));
-
         assertFuzzyEquals("Input strings cannot be null or empty", it.insert("",
             "b"));
         assertFuzzyEquals("Input strings cannot be null or empty", it.insert(
@@ -52,7 +49,6 @@ public class SongsTest extends TestCase {
             "a", ""));
         assertFuzzyEquals("Input strings cannot be null or empty", it.insert(
             "a", null));
-
         assertFuzzyEquals("Input strings cannot be null or empty", it.remove(
             "song", ""));
         assertFuzzyEquals("Input strings cannot be null or empty", it.remove(
@@ -73,7 +69,6 @@ public class SongsTest extends TestCase {
     public void testEmpty() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
-
         assertFuzzyEquals("total artists: 0", it.print("artist"));
         assertFuzzyEquals("total songs: 0", it.print("song"));
         it.insert("Hello World", "Hello World2");
@@ -91,7 +86,6 @@ public class SongsTest extends TestCase {
      *
      * @throws Exception
      */
-
     public void testClear() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -102,6 +96,9 @@ public class SongsTest extends TestCase {
     }
 
 
+    /**
+     * Test for duplicates in the database
+     */
     public void testDuplicates() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -114,15 +111,13 @@ public class SongsTest extends TestCase {
 
     // ----------------------------------------------------------
     /**
-     * Show output formats
+     * Check that the output formats are correct
      *
      * @throws Exception
      */
-
     public void testSampleInput() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
-
         assertFuzzyEquals(
             "|When Summer's Through| does not exist in the Song database", it
                 .remove("song", "When Summer's Through"));
@@ -203,6 +198,9 @@ public class SongsTest extends TestCase {
     }
 
 
+    /**
+     * Tests that memory manager does block splitting
+     */
     public void testMemManagerEdgeSplit() throws Exception {
         it = new SongsDB();
         it.create(4, 8);
@@ -213,161 +211,128 @@ public class SongsTest extends TestCase {
         assertNotNull(blocks);
     }
 
-/*
- * public void testInsertMany() throws Exception {
- * it = new SongsDB();
- * it.create(4, 16);
- * 
- * for (int i = 0; i < 20; i++) {
- * it.insert("Artist" + i, "Song" + i);
- * }
- * 
- * assertTrue(it.print("artist").contains("total artists"));
- * }
- */
 
-
+    /**
+     * Tests that hash table resizes correctly after reaching capacity
+     */
     public void testHashResize() throws Exception {
         it = new SongsDB();
         it.create(2, 64);
         it.insert("A", "1");
         it.insert("B", "2");
         String artists = it.print("artist");
-
         assertTrue(artists.contains("total artists: 2"));
     }
 
 
+    /**
+     * Tests that probing still works after a deletion
+     */
     public void testProbeAfterDelete() throws Exception {
         it = new SongsDB();
-        it.create(4, 64); // tiny hash forces collisions
-
-        it.insert("Aa", "1"); // "Aa" and "BB" collide in many sfold variants
+        it.create(4, 64);
+        it.insert("Aa", "1");
         it.insert("BB", "2");
-
         it.remove("artist", "Aa");
-
-        // If probing is wrong, this lookup fails
         String result = it.print("artist");
-
         assertTrue(result.contains("|BB|"));
     }
 
-/*
- * public void testExpandThenImmediateInsert() throws Exception {
- * it = new SongsDB();
- * it.create(10, 16);
- * for (int i = 0; i < 20; i++) {
- * it.insert("Artist" + i, "Song" + i);
- * }
- * String result = it.insert("FinalArtist", "FinalSong");
- * 
- * assertTrue(result.contains("FinalSong"));
- * }
- */
 
-
+    /**
+     * Tests that memory manager can still allocate blocks after removing
+     * records
+     */
     public void testRemoveAllThenAllocateHuge() throws Exception {
         it = new SongsDB();
         it.create(10, 64);
-
         for (int i = 0; i < 10; i++) {
-            it.insert("A" + i, "BBBBBBBB"); // same size blocks
+            it.insert("A" + i, "BBBBBBBB");
         }
-
         for (int i = 0; i < 10; i++) {
             it.remove("song", "BBBBBBBB");
         }
-
-        // Should merge into one giant block
         String res = it.insert("BIG", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
         assertTrue(res.contains("BIG"));
     }
 
 
+    /**
+     * Tests that memory manager can still allocate blocks after removing
+     * records
+     */
     public void testTombstoneProbeChain() throws Exception {
         it = new SongsDB();
-        it.create(4, 64); // tiny table forces collisions
-
+        it.create(4, 64);
         it.insert("AA", "1");
         it.insert("BB", "2");
         it.insert("CC", "3");
-
-        it.remove("artist", "AA"); // leaves tombstone
-
-        // This MUST probe past tombstone
+        it.remove("artist", "AA");
         it.insert("DD", "4");
-
         String print = it.print("artist");
-
         assertTrue(print.contains("DD"));
     }
 
 
+    /**
+     * Tests that adding smaller records after a large one will cause block
+     * splits
+     */
     public void testSplitCascade() throws Exception {
         it = new SongsDB();
         it.create(10, 128);
-
-        // one big allocation
         it.insert("Huge", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
-        // now many tiny allocations
         for (int i = 0; i < 10; i++) {
             it.insert("Tiny" + i, "A");
         }
-
         assertTrue(it.print("artist").contains("Tiny9"));
     }
 
 
+    /**
+     * Tests that larger block can still be allocated after removing alternating
+     * blocks
+     */
     public void testCheckerboardFragmentation() throws Exception {
         it = new SongsDB();
         it.create(10, 128);
-
         for (int i = 0; i < 8; i++) {
             it.insert("A" + i, "BBBBBBBB");
         }
-
-        // remove every other
         for (int i = 0; i < 8; i += 2) {
             it.remove("song", "BBBBBBBB");
         }
-
-        // requires merges across gaps
         String res = it.insert("Large", "XXXXXXXXXXXXXXXX");
-
         assertTrue(res.contains("Large"));
     }
 
 
+    /**
+     * Tests that removing then re-adding a record works correctly
+     */
     public void testRemoveThenReinsertSame() throws Exception {
         it = new SongsDB();
         it.create(10, 64);
-
         it.insert("Artist", "Song");
         it.remove("song", "Song");
-
         String res = it.insert("Artist2", "Song");
-
         assertTrue(res.contains("Song"));
     }
 
 
+    /**
+     * Tests that hash table can show tombstones after deleting the database
+     */
     public void testPrintAfterManyRemoves() throws Exception {
         it = new SongsDB();
         it.create(10, 64);
-
         for (int i = 0; i < 10; i++) {
             it.insert("A" + i, "S" + i);
         }
-
         for (int i = 0; i < 10; i++) {
             it.remove("artist", "A" + i);
         }
-
         String out = it.print("artist");
-
         String expected = "1: TOMBSTONE\n" + "2: TOMBSTONE\n" + "5: TOMBSTONE\n"
             + "6: TOMBSTONE\n" + "9: TOMBSTONE\n" + "10: TOMBSTONE\n"
             + "13: TOMBSTONE\n" + "14: TOMBSTONE\n" + "17: TOMBSTONE\n"
@@ -375,39 +340,28 @@ public class SongsTest extends TestCase {
         assertEquals(expected.trim(), out.trim());
     }
 
-/*
- * public void testMassInsert() throws Exception {
- * it = new SongsDB();
- * it.create(16, 32);
- * 
- * for (int i = 0; i < 200; i++) {
- * it.insert("Artist" + i, "Song" + i);
- * }
- * 
- * assertTrue(it.print("artist").contains("Artist199"));
- * }
- */
 
-
+    /**
+     * Tests that tomb stones don't mess up hash table resizing
+     */
     public void testResizeWithTombstones() throws Exception {
         it = new SongsDB();
         it.create(4, 64);
-
         it.insert("A", "1");
         it.insert("B", "2");
         it.insert("C", "3");
-
         it.remove("artist", "B");
         it.insert("D", "4");
         it.insert("E", "5");
-
         String table = it.print("artist");
-
         assertTrue(table.contains("A"));
         assertTrue(table.contains("D"));
     }
 
 
+    /**
+     * Test merging memory blocks then splitting again
+     */
     public void testMergeThenSplit() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -417,14 +371,16 @@ public class SongsTest extends TestCase {
 
         it.remove("song", "AAAA");
         it.remove("song", "BBBB");
-        it.remove("artist", "A"); // ADD THIS
-        it.remove("artist", "B"); // ADD THIS
-
+        it.remove("artist", "A");
+        it.remove("artist", "B");
         String blocks = it.print("blocks");
         assertFalse(blocks.contains("4 "));
     }
 
 
+    /**
+     * Test merging across multiple memory levels
+     */
     public void testMergeAcrossMultipleLevels() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -436,16 +392,18 @@ public class SongsTest extends TestCase {
         it.remove("song", "AAAA");
         it.remove("song", "BBBB");
         it.remove("song", "CCCCCCCC");
-        it.remove("artist", "A"); // ADD THIS
-        it.remove("artist", "B"); // ADD THIS
-        it.remove("artist", "C"); // ADD THIS
-
+        it.remove("artist", "A");
+        it.remove("artist", "B");
+        it.remove("artist", "C");
         String blocks = it.print("blocks");
         assertFalse(blocks.contains("4 "));
         assertFalse(blocks.contains("8 "));
     }
 
 
+    /**
+     * Test merging, splitting, then merging again
+     */
     public void testMergeSplitMergeAgain() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -455,13 +413,13 @@ public class SongsTest extends TestCase {
 
         it.remove("song", "AAAA");
         it.remove("song", "BBBB");
-        it.remove("artist", "A"); // ADD THIS
-        it.remove("artist", "B"); // ADD THIS
+        it.remove("artist", "A");
+        it.remove("artist", "B");
 
         it.insert("C", "CCCCCCCCCCCCCCCC");
 
         it.remove("song", "CCCCCCCCCCCCCCCC");
-        it.remove("artist", "C"); // ADD THIS
+        it.remove("artist", "C");
 
         String blocks = it.print("blocks");
         assertFalse(blocks.contains("4 "));
@@ -470,6 +428,9 @@ public class SongsTest extends TestCase {
     }
 
 
+    /**
+     * Test reverse removal and memory merging
+     */
     public void testReverseRemovalMerge() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -479,14 +440,19 @@ public class SongsTest extends TestCase {
 
         it.remove("song", "BBBB");
         it.remove("song", "AAAA");
-        it.remove("artist", "B"); // ADD THIS
-        it.remove("artist", "A"); // ADD THIS
+        it.remove("artist", "B");
+        it.remove("artist", "A");
 
         String blocks = it.print("blocks");
         assertFalse(blocks.contains("4 "));
     }
 
 
+    /**
+     * Test expansion before merge of memory blocks
+     * 
+     * @throws Exception
+     */
     public void testExpansionThenMerge() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -494,13 +460,14 @@ public class SongsTest extends TestCase {
         it.insert("A", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         it.remove("song", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        it.remove("artist", "A"); // ADD THIS
+        it.remove("artist", "A");
 
         String blocks = it.print("blocks");
         assertFalse(blocks.contains("32 32"));
     }
 
 
+    /** Test removing then inserting same song name */
     public void testRemoveThenInsertSameName() throws Exception {
         it = new SongsDB();
         it.create(10, 32);
@@ -516,6 +483,7 @@ public class SongsTest extends TestCase {
     }
 
 
+    /** Test full collapse of memory blocks after removals */
     public void testFullCollapse() throws Exception {
         it = new SongsDB();
         it.create(10, 64);
@@ -534,6 +502,11 @@ public class SongsTest extends TestCase {
     }
 
 
+    /**
+     * Test inserting null artist and song values
+     * 
+     * @throws IOException
+     */
     public void testInsertNullArtistAndSong() throws Exception {
         it = new SongsDB();
         it.create(10, 32);

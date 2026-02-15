@@ -95,18 +95,16 @@ public class SongsDB implements Songs {
         int songSize = songTable.getCapacity();
         Handle artistHand = artistTable.find(artistString);
         if (artistHand == null) {
-            artistHand = manager.insert(artistString);
+            artistHand = manager.insert(artistString.getBytes());
             if (manager.getResize()) {
                 toRet += "Memory pool expanded to be " + manager.getMemSize()
                     + " bytes\r\n";
             }
-            String artistStr = artistTable.insert(artistHand, artistString);
+            artistTable.insert(artistHand, artistString);
             if (artistTable.getCapacity() > artSize) {
                 toRet += "Artist hash table size doubled\r\n";
             }
-            if (artistStr == null) {
-                toRet += artistString + " is added to the Artist database \r\n";
-            }
+            toRet += artistString + " is added to the Artist database \r\n";
         }
         else {
             toRet += artistString
@@ -114,18 +112,16 @@ public class SongsDB implements Songs {
         }
         Handle songHand = songTable.find(songString);
         if (songHand == null) {
-            songHand = manager.insert(songString);
+            songHand = manager.insert(songString.getBytes());
             if (manager.getResize()) {
                 toRet += "Memory pool expanded to be " + manager.getMemSize()
                     + " bytes\r\n";
             }
-            String songStr = songTable.insert(songHand, songString);
+            songTable.insert(songHand, songString);
             if (songTable.getCapacity() > songSize) {
                 toRet += "Song hash table size doubled\r\n";
             }
-            if (songStr == null) {
-                toRet += songString + " is added to the Song database";
-            }
+            toRet += songString + " is added to the Song database";
         }
         else {
             toRet += songString

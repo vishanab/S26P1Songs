@@ -73,13 +73,12 @@ public class Hash {
         int i = 0;
         int fTomb = -1;
         while (table[slot] != null) {
-            if (table[slot] == TOMB && fTomb == -1) {
-                fTomb = slot;
+            if (table[slot] == TOMB) {
+                if (fTomb == -1) {
+                    fTomb = slot;
+                }
             }
             i++;
-            if (i >= capacity) {
-                break;
-            }
             slot = (home + i * i) % capacity;
         }
         if (fTomb != -1) {
@@ -107,7 +106,7 @@ public class Hash {
         int i = 0;
         while (table[slot] != null) {
             if (table[slot] != TOMB) {
-                String curr = manager.find(table[slot]);
+                String curr = new String(manager.find(table[slot]));
                 if (curr.equals(nameString)) {
                     manager.remove(table[slot]);
                     table[slot] = TOMB;
@@ -135,7 +134,7 @@ public class Hash {
         size = 0;
         for (Handle hand : old) {
             if (hand != null && hand != TOMB) {
-                String s = manager.find(hand);
+                String s = new String(manager.find(hand));
                 insert(hand, s);
             }
         }
@@ -155,7 +154,7 @@ public class Hash {
         int i = 0;
         while (table[slot] != null) {
             if (table[slot] != TOMB) {
-                String curr = manager.find(table[slot]);
+                String curr = new String(manager.find(table[slot]));
                 if (curr.equals(s)) {
                     return table[slot];
                 }
@@ -204,7 +203,7 @@ public class Hash {
                 output += i + ": TOMBSTONE\n";
             }
             else if (table[i] != null) {
-                String name = manager.find(table[i]);
+                String name = new String(manager.find(table[i]));
                 output += i + ": |" + name + "|\n";
             }
         }
